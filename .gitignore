@@ -1,0 +1,14 @@
+# OpenClaw
+.openclaw/
+*.log
+
+# Node
+node_modules/
+package-lock.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 敏感文件（稍后再决定是否提交）
+# memory/  # 个人记忆文件可能不需要提交
