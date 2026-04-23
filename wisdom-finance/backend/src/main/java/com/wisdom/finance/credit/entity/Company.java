@@ -60,4 +60,125 @@ public class Company extends BaseEntity {
     
     @Column(name = "data_source", length = 50)
     private String dataSource; // 数据来源
+    
+    // 手动添加getter和setter方法，解决Lombok问题
+    public String getCompanyName() {
+        return companyName;
+    }
+    
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+    
+    public String getCreditCode() {
+        return creditCode;
+    }
+    
+    public void setCreditCode(String creditCode) {
+        this.creditCode = creditCode;
+    }
+    
+    public String getLegalPerson() {
+        return legalPerson;
+    }
+    
+    public void setLegalPerson(String legalPerson) {
+        this.legalPerson = legalPerson;
+    }
+    
+    public BigDecimal getRegisteredCapital() {
+        return registeredCapital;
+    }
+    
+    public void setRegisteredCapital(BigDecimal registeredCapital) {
+        this.registeredCapital = registeredCapital;
+    }
+    
+    public LocalDate getEstablishmentDate() {
+        return establishmentDate;
+    }
+    
+    public void setEstablishmentDate(LocalDate establishmentDate) {
+        this.establishmentDate = establishmentDate;
+    }
+    
+    public String getBusinessStatus() {
+        return businessStatus;
+    }
+    
+    public void setBusinessStatus(String businessStatus) {
+        this.businessStatus = businessStatus;
+    }
+    
+    public String getIndustry() {
+        return industry;
+    }
+    
+    public void setIndustry(String industry) {
+        this.industry = industry;
+    }
+    
+    public String getRegionCode() {
+        return regionCode;
+    }
+    
+    public void setRegionCode(String regionCode) {
+        this.regionCode = regionCode;
+    }
+    
+    public String getAddress() {
+        return address;
+    }
+    
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    
+    public Integer getCreditScore() {
+        return creditScore;
+    }
+    
+    public void setCreditScore(Integer creditScore) {
+        this.creditScore = creditScore;
+    }
+    
+    public String getRiskLevel() {
+        return riskLevel;
+    }
+    
+    public void setRiskLevel(String riskLevel) {
+        this.riskLevel = riskLevel;
+    }
+    
+    public String getBusinessScope() {
+        return businessScope;
+    }
+    
+    public void setBusinessScope(String businessScope) {
+        this.businessScope = businessScope;
+    }
+    
+    public Integer getEmployeeCount() {
+        return employeeCount;
+    }
+    
+    public void setEmployeeCount(Integer employeeCount) {
+        this.employeeCount = employeeCount;
+    }
+    
+    public BigDecimal getAnnualRevenue() {
+        return annualRevenue;
+    }
+    
+    public void setAnnualRevenue(BigDecimal annualRevenue) {
+        this.annualRevenue = annualRevenue;
+    }
+    
+    public String getDataSource() {
+        return dataSource;
+    }
+    
+    public void setDataSource(String dataSource) {
+        this.dataSource = dataSource;
+    }
 }

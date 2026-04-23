@@ -2,7 +2,8 @@ package com.wisdom.finance.notification.service;
 
 import com.wisdom.finance.notification.constant.NotificationType;
 import com.wisdom.finance.notification.entity.Notification;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -21,9 +22,10 @@ import java.util.stream.Collectors;
  * 
  * 提供通知的发送、查询、管理等功能
  */
-@Slf4j
 @Service
 public class NotificationService {
+    
+    private static final Logger log = LoggerFactory.getLogger(NotificationService.class);
     
     // 模拟数据库存储
     private final Map<Long, Notification> notificationStore = new ConcurrentHashMap<>();

@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智慧金服系统测试页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .login-section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .modules-section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .module {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+        }
+        
+        .module h3 {
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+        
+        .api-test {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+        
+        .api-test h4 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .response {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        
+        .success {
+            border-left: 4px solid #27ae60;
+        }
+        
+        .error {
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .test-accounts {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .test-accounts h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .test-accounts table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .test-accounts th,
+        .test-accounts td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .test-accounts th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>智慧金服系统测试页面</h1>
+        
+        <!-- 测试账户信息 -->
+        <div class="test-accounts">
+            <h3>测试账户</h3>
+            <table>
+                <tr>
+                    <th>用户名</th>
+                    <th>密码</th>
+                    <th>角色</th>
+                    <th>邮箱</th>
+                </tr>
+                <tr>
+                    <td>admin</td>
+                    <td>123456</td>
+                    <td>平台管理员</td>
+                    <td>admin@wisdom.com</td>
+                </tr>
+                <tr>
+                    <td>risk</td>
+                    <td>123456</td>
+                    <td>风控人员</td>
+                    <td>risk@wisdom.com</td>
+                </tr>
+                <tr>
+                    <td>bank</td>
+                    <td>123456</td>
+                    <td>金融机构</td>
+                    <td>bank@wisdom.com</td>
+                </tr>
+                <tr>
+                    <td>enterprise</td>
+                    <td>123456</td>
+                    <td>中小企业</td>
+                    <td>enterprise@wisdom.com</td>
+                </tr>
+                <tr>
+                    <td>farmer</td>
+                    <td>123456</td>
+                    <td>农户</td>
+                    <td>farmer@wisdom.com</td>
+                </tr>
+                <tr>
+                    <td>government</td>
+                    <td>123456</td>
+                    <td>政府部门</td>
+                    <td>government@wisdom.com</td>
+                </tr>
+                <tr>
+                    <td>thirdparty</td>
+                    <td>123456</td>
+                    <td>第三方服务商</td>
+                    <td>thirdparty@wisdom.com</td>
+                </tr>
+            </table>
+        </div>
+        
+        <!-- 登录功能 -->
+        <div class="login-section">
+            <h2>用户登录</h2>
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="text" id="username" value="admin" placeholder="请输入用户名">
+            </div>
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" value="123456" placeholder="请输入密码">
+            </div>
+            <button onclick="login()">登录</button>
+            <div id="loginResponse" class="response"></div>
+        </div>
+        
+        <!-- 功能模块测试 -->
+        <div class="modules-section">
+            <h2>功能模块测试</h2>
+            
+            <!-- 用户模块 -->
+            <div class="module">
+                <h3>用户模块</h3>
+                <div class="api-test">
+                    <h4>获取用户列表</h4>
+                    <button onclick="getUsers()">测试</button>
+                    <div id="usersResponse" class="response"></div>
+                </div>
+                <div class="api-test">
+                    <h4>获取农户列表</h4>
+                    <button onclick="getFarmers()">测试</button>
+                    <div id="farmersResponse" class="response"></div>
+                </div>
+                <div class="api-test">
+                    <h4>获取企业列表</h4>
+                    <button onclick="getEnterprises()">测试</button>
+                    <div id="enterprisesResponse" class="response"></div>
+                </div>
+            </div>
+            
+            <!-- 信用模块 -->
+            <div class="module">
+                <h3>信用模块</h3>
+                <div class="api-test">
+                    <h4>获取企业信用信息</h4>
+                    <input type="text" id="creditCode" placeholder="统一社会信用代码" value="91110000MA12345678">
+                    <button onclick="getCompanyCredit()">测试</button>
+                    <div id="companyCreditResponse" class="response"></div>
+                </div>
+                <div class="api-test">
+                    <h4>生成信用报告</h4>
+                    <input type="number" id="companyId" placeholder="企业ID" value="1">
+                    <button onclick="generateCreditReport()">测试</button>
+                    <div id="creditReportResponse" class="response"></div>
+                </div>
+            </div>
+            
+            <!-- 贷款模块 -->
+            <div class="module">
+                <h3>贷款模块</h3>
+                <div class="api-test">
+                    <h4>获取贷款产品列表</h4>
+                    <button onclick="getLoanProducts()">测试</button>
+                    <div id="loanProductsResponse" class="response"></div>
+                </div>
+            </div>
+            
+            <!-- 审批模块 -->
+            <div class="module">
+                <h3>审批模块</h3>
+                <div class="api-test">
+                    <h4>获取审批规则</h4>
+                    <button onclick="getApprovalRules()">测试</button>
+                    <div id="approvalRulesResponse" class="response"></div>
+                </div>
+            </div>
+            
+            <!-- 担保模块 -->
+            <div class="module">
+                <h3>担保模块</h3>
+                <div class="api-test">
+                    <h4>获取担保列表</h4>
+                    <button onclick="getGuarantees()">测试</button>
+                    <div id="guaranteesResponse" class="response"></div>
+                </div>
+            </div>
+            
+            <!-- 银行模块 -->
+            <div class="module">
+                <h3>银行模块</h3>
+                <div class="api-test">
+                    <h4>获取银行列表</h4>
+                    <button onclick="getBanks()">测试</button>
+                    <div id="banksResponse" class="response"></div>
+                </div>
+            </div>
+            
+            <!-- 运营模块 -->
+            <div class="module">
+                <h3>运营模块</h3>
+                <div class="api-test">
+                    <h4>获取系统配置</h4>
+                    <button onclick="getSystemConfigs()">测试</button>
+                    <div id="systemConfigsResponse" class="response"></div>
+                </div>
+                <div class="api-test">
+                    <h4>生成征信业务审计报告</h4>
+                    <button onclick="generateCreditAuditReport()">测试</button>
+                    <div id="creditAuditReportResponse" class="response"></div>
+                </div>
+            </div>
+            
+            <!-- 第三方服务模块 -->
+            <div class="module">
+                <h3>第三方服务模块</h3>
+                <div class="api-test">
+                    <h4>获取服务列表</h4>
+                    <button onclick="getThirdPartyServices()">测试</button>
+                    <div id="thirdPartyServicesResponse" class="response"></div>
+                </div>
+                <div class="api-test">
+                    <h4>创建服务订单</h4>
+                    <button onclick="createServiceOrder()">测试</button>
+                    <div id="serviceOrderResponse" class="response"></div>
+                </div>
+            </div>
+            
+            <!-- 订阅服务模块 -->
+            <div class="module">
+                <h3>订阅服务模块</h3>
+                <div class="api-test">
+                    <h4>获取订阅服务列表</h4>
+                    <button onclick="getSubscriptionServices()">测试</button>
+                    <div id="subscriptionServicesResponse" class="response"></div>
+                </div>
+                <div class="api-test">
+                    <h4>创建订阅</h4>
+                    <button onclick="createSubscription()">测试</button>
+                    <div id="subscriptionResponse" class="response"></div>
+                </div>
+                <div class="api-test">
+                    <h4>获取用户订阅列表</h4>
+                    <button onclick="getUserSubscriptions()">测试</button>
+                    <div id="userSubscriptionsResponse" class="response"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let token = '';
+        
+        // 登录函数
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const responseDiv = document.getElementById('loginResponse');
+            
+            fetch('http://localhost:8080/api/user/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'username': username,
+                    'password': password
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                responseDiv.className = 'response ' + (data.success ? 'success' : 'error');
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+                if (data.success) {
+                    token = data.data.token || '';
+                    alert('登录成功！');
+                }
+            })
+            .catch(error => {
+                responseDiv.className = 'response error';
+                responseDiv.textContent = '登录失败: ' + error.message;
+            });
+        }
+        
+        // 通用API调用函数
+        function callApi(url, method, data, responseId) {
+            const responseDiv = document.getElementById(responseId);
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            
+            if (token) {
+                headers['Authorization'] = 'Bearer ' + token;
+            }
+            
+            fetch(url, {
+                method: method,
+                headers: headers,
+                body: data ? JSON.stringify(data) : null
+            })
+            .then(response => response.json())
+            .then(data => {
+                responseDiv.className = 'response ' + (data.success ? 'success' : 'error');
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                responseDiv.className = 'response error';
+                responseDiv.textContent = '请求失败: ' + error.message;
+            });
+        }
+        
+        // 用户模块测试
+        function getUsers() {
+            callApi('http://localhost:8080/api/user/list', 'GET', null, 'usersResponse');
+        }
+        
+        function getFarmers() {
+            callApi('http://localhost:8080/api/user/farmers', 'GET', null, 'farmersResponse');
+        }
+        
+        function getEnterprises() {
+            callApi('http://localhost:8080/api/user/enterprises', 'GET', null, 'enterprisesResponse');
+        }
+        
+        // 信用模块测试
+        function getCompanyCredit() {
+            const creditCode = document.getElementById('creditCode').value;
+            callApi(`http://localhost:8080/api/credit/company/by-code/${creditCode}`, 'GET', null, 'companyCreditResponse');
+        }
+        
+        function generateCreditReport() {
+            const companyId = document.getElementById('companyId').value;
+            callApi('http://localhost:8080/api/credit/report/generate', 'POST', {
+                companyId: companyId,
+                reportType: 'STANDARD',
+                generatedBy: 'test'
+            }, 'creditReportResponse');
+        }
+        
+        // 贷款模块测试
+        function getLoanProducts() {
+            callApi('http://localhost:8080/api/loan/products', 'GET', null, 'loanProductsResponse');
+        }
+        
+        // 审批模块测试
+        function getApprovalRules() {
+            callApi('http://localhost:8080/api/approval/rules', 'GET', null, 'approvalRulesResponse');
+        }
+        
+        // 担保模块测试
+        function getGuarantees() {
+            callApi('http://localhost:8080/api/guarantee/guarantees', 'GET', null, 'guaranteesResponse');
+        }
+        
+        // 银行模块测试
+        function getBanks() {
+            callApi('http://localhost:8080/api/bank/banks', 'GET', null, 'banksResponse');
+        }
+        
+        // 运营模块测试
+        function getSystemConfigs() {
+            callApi('http://localhost:8080/api/admin/config/list', 'GET', null, 'systemConfigsResponse');
+        }
+        
+        function generateCreditAuditReport() {
+            const today = new Date().toISOString().split('T')[0];
+            callApi('http://localhost:8080/api/admin/credit/audit/generate', 'POST', {
+                auditDate: today,
+                reportType: '月度',
+                auditor: 'admin'
+            }, 'creditAuditReportResponse');
+        }
+        
+        // 第三方服务模块测试
+        function getThirdPartyServices() {
+            callApi('http://localhost:8080/api/thirdparty/services', 'GET', null, 'thirdPartyServicesResponse');
+        }
+        
+        function createServiceOrder() {
+            callApi('http://localhost:8080/api/thirdparty/order/create', 'POST', {
+                serviceId: 1,
+                userId: 4,
+                providerId: 7,
+                orderAmount: 1000,
+                serviceContent: '财务咨询服务',
+                requirements: '企业财务分析',
+                contactPerson: '张三',
+                contactPhone: '13800138003'
+            }, 'serviceOrderResponse');
+        }
+        
+        // 订阅服务模块测试
+        function getSubscriptionServices() {
+            callApi('http://localhost:8080/api/subscription/services', 'GET', null, 'subscriptionServicesResponse');
+        }
+        
+        function createSubscription() {
+            callApi('http://localhost:8080/api/subscription/create', 'POST', {
+                serviceId: 1,
+                userId: 4,
+                userType: 'SME',
+                amount: 1000,
+                autoRenew: false
+            }, 'subscriptionResponse');
+        }
+        
+        function getUserSubscriptions() {
+            callApi('http://localhost:8080/api/subscription/user/4', 'GET', null, 'userSubscriptionsResponse');
+        }
+    </script>
+</body>
+</html>

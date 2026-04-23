@@ -55,6 +55,111 @@ public class Notification {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     
+    // 手动添加getter和setter方法，解决Lombok问题
+    public Long getId() {
+        return id;
+    }
+    
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
+    public Long getUserId() {
+        return userId;
+    }
+    
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+    
+    public String getTitle() {
+        return title;
+    }
+    
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    
+    public String getContent() {
+        return content;
+    }
+    
+    public void setContent(String content) {
+        this.content = content;
+    }
+    
+    public NotificationType getType() {
+        return type;
+    }
+    
+    public void setType(NotificationType type) {
+        this.type = type;
+    }
+    
+    public NotificationChannel getChannel() {
+        return channel;
+    }
+    
+    public void setChannel(NotificationChannel channel) {
+        this.channel = channel;
+    }
+    
+    public String getReferenceType() {
+        return referenceType;
+    }
+    
+    public void setReferenceType(String referenceType) {
+        this.referenceType = referenceType;
+    }
+    
+    public Long getReferenceId() {
+        return referenceId;
+    }
+    
+    public void setReferenceId(Long referenceId) {
+        this.referenceId = referenceId;
+    }
+    
+    public Boolean getReadStatus() {
+        return readStatus;
+    }
+    
+    public void setReadStatus(Boolean readStatus) {
+        this.readStatus = readStatus;
+    }
+    
+    public LocalDateTime getReadAt() {
+        return readAt;
+    }
+    
+    public void setReadAt(LocalDateTime readAt) {
+        this.readAt = readAt;
+    }
+    
+    public Boolean getSendStatus() {
+        return sendStatus;
+    }
+    
+    public void setSendStatus(Boolean sendStatus) {
+        this.sendStatus = sendStatus;
+    }
+    
+    public LocalDateTime getSendAt() {
+        return sendAt;
+    }
+    
+    public void setSendAt(LocalDateTime sendAt) {
+        this.sendAt = sendAt;
+    }
+    
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+    
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+    
     public enum NotificationType {
         APPLICATION_SUBMITTED,   // 申请已提交
         APPLICATION_APPROVED,    // 申请通过

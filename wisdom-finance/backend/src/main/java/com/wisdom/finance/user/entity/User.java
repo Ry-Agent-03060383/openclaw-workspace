@@ -1,9 +1,9 @@
-package com.wisdom.user.entity;
+package com.wisdom.finance.user.entity;
 
 import com.wisdom.finance.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EquasAndHashCode;
+import lombok.EqualsAndHashCode;
 
 /**
  * 用户实体 - 支持多租户多角色
@@ -51,6 +51,7 @@ public class User extends BaseEntity {
      */
     public enum UserType {
         SME,                    // 中小企业
+        FARMER,                 // 农户
         FINANCIAL_INSTITUTION,  // 金融机构
         RISK_MANAGER,           // 风控人员
         ADMIN,                  // 管理人员（平台运营）

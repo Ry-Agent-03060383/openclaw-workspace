@@ -89,6 +89,199 @@ public class LoanApplication extends BaseEntity {
     @Column(name = "rejection_reason", length = 500)
     private String rejectionReason; // 拒绝原因
     
+    // 手动添加getter和setter方法，解决Lombok问题
+    public String getApplicationNo() {
+        return applicationNo;
+    }
+    
+    public void setApplicationNo(String applicationNo) {
+        this.applicationNo = applicationNo;
+    }
+    
+    public Long getUserId() {
+        return userId;
+    }
+    
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+    
+    public Long getProductId() {
+        return productId;
+    }
+    
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+    
+    public Long getCompanyId() {
+        return companyId;
+    }
+    
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
+    }
+    
+    public String getCompanyName() {
+        return companyName;
+    }
+    
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+    
+    public String getCreditCode() {
+        return creditCode;
+    }
+    
+    public void setCreditCode(String creditCode) {
+        this.creditCode = creditCode;
+    }
+    
+    public BigDecimal getLoanAmount() {
+        return loanAmount;
+    }
+    
+    public void setLoanAmount(BigDecimal loanAmount) {
+        this.loanAmount = loanAmount;
+    }
+    
+    public Integer getLoanTermMonths() {
+        return loanTermMonths;
+    }
+    
+    public void setLoanTermMonths(Integer loanTermMonths) {
+        this.loanTermMonths = loanTermMonths;
+    }
+    
+    public BigDecimal getInterestRate() {
+        return interestRate;
+    }
+    
+    public void setInterestRate(BigDecimal interestRate) {
+        this.interestRate = interestRate;
+    }
+    
+    public String getLoanPurpose() {
+        return loanPurpose;
+    }
+    
+    public void setLoanPurpose(String loanPurpose) {
+        this.loanPurpose = loanPurpose;
+    }
+    
+    public String getRepaymentMethod() {
+        return repaymentMethod;
+    }
+    
+    public void setRepaymentMethod(String repaymentMethod) {
+        this.repaymentMethod = repaymentMethod;
+    }
+    
+    public ApplicationStatus getStatus() {
+        return status;
+    }
+    
+    public void setStatus(ApplicationStatus status) {
+        this.status = status;
+    }
+    
+    public Integer getCreditScore() {
+        return creditScore;
+    }
+    
+    public void setCreditScore(Integer creditScore) {
+        this.creditScore = creditScore;
+    }
+    
+    public String getRiskLevel() {
+        return riskLevel;
+    }
+    
+    public void setRiskLevel(String riskLevel) {
+        this.riskLevel = riskLevel;
+    }
+    
+    public Integer getRiskScore() {
+        return riskScore;
+    }
+    
+    public void setRiskScore(Integer riskScore) {
+        this.riskScore = riskScore;
+    }
+    
+    public BigDecimal getApprovedAmount() {
+        return approvedAmount;
+    }
+    
+    public void setApprovedAmount(BigDecimal approvedAmount) {
+        this.approvedAmount = approvedAmount;
+    }
+    
+    public Integer getApprovedTermMonths() {
+        return approvedTermMonths;
+    }
+    
+    public void setApprovedTermMonths(Integer approvedTermMonths) {
+        this.approvedTermMonths = approvedTermMonths;
+    }
+    
+    public BigDecimal getApprovedInterestRate() {
+        return approvedInterestRate;
+    }
+    
+    public void setApprovedInterestRate(BigDecimal approvedInterestRate) {
+        this.approvedInterestRate = approvedInterestRate;
+    }
+    
+    public LocalDateTime getSubmitTime() {
+        return submitTime;
+    }
+    
+    public void setSubmitTime(LocalDateTime submitTime) {
+        this.submitTime = submitTime;
+    }
+    
+    public LocalDateTime getReviewTime() {
+        return reviewTime;
+    }
+    
+    public void setReviewTime(LocalDateTime reviewTime) {
+        this.reviewTime = reviewTime;
+    }
+    
+    public Long getReviewerId() {
+        return reviewerId;
+    }
+    
+    public void setReviewerId(Long reviewerId) {
+        this.reviewerId = reviewerId;
+    }
+    
+    public String getReviewComment() {
+        return reviewComment;
+    }
+    
+    public void setReviewComment(String reviewComment) {
+        this.reviewComment = reviewComment;
+    }
+    
+    public String getMaterials() {
+        return materials;
+    }
+    
+    public void setMaterials(String materials) {
+        this.materials = materials;
+    }
+    
+    public String getRejectionReason() {
+        return rejectionReason;
+    }
+    
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
+    }
+    
     /**
      * 申请状态枚举
      */
