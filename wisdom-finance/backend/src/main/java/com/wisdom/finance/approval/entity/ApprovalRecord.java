@@ -1,6 +1,6 @@
-package com.wisdom.approval.entity;
+package com.wisdom.finance.approval.entity;
 
-import com.wisdom.loan.entity.LoanApplication;
+import com.wisdom.finance.loan.entity.LoanApplication;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;

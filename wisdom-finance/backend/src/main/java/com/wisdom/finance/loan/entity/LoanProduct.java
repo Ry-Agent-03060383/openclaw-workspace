@@ -1,4 +1,4 @@
-package com.wisdom.loan.entity;
+package com.wisdom.finance.loan.entity;
 
 import com.wisdom.finance.common.entity.BaseEntity;
 import jakarta.persistence.*;

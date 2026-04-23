@@ -1,7 +1,7 @@
-package com.wisdom.credit.service;
+package com.wisdom.finance.credit.service;
 
-import com.wisdom.credit.entity.Company;
-import com.wisdom.credit.mapper.CompanyMapper;
+import com.wisdom.finance.credit.entity.Company;
+import com.wisdom.finance.credit.mapper.CompanyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,28 +18,36 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CreditQueryService {
     
-    private final CompanyMapper companyMapper;
+    private final CompanyRepository companyRepository;
     
     /**
      * 按统一社会信用代码精确查询
      */
     public Company findByCreditCode(String creditCode) {
-        return companyMapper.findByCreditCode(creditCode);
+        return companyRepository.findByCreditCode(creditCode).orElse(null);
     }
     
     /**
      * 按企业名称模糊搜索
      */
-    public List<Company> searchByName(String companyName, int limit) {
-        return companyMapper.searchByName(companyName, limit);
+    public List<Company> searchByName(String companyName) {
+        return companyRepository.findAll().stream()
+                .filter(c -> c.getCompanyName() != null && c.getCompanyName().contains(companyName))
+                .toList();
     }
     
     /**
-     * 多维度筛选查询
+     * 按ID查询企业
      */
-    public List<Company> searchByConditions(String regionCode, String industry, 
-                                            BigDecimal minCapital, BigDecimal maxCapital) {
-        return companyMapper.searchByConditions(regionCode, industry, minCapital, maxCapital);
+    public Company findById(Long companyId) {
+        return companyRepository.findById(companyId).orElse(null);
+    }
+    
+    /**
+     * 查询所有企业
+     */
+    public List<Company> findAll() {
+        return companyRepository.findAll();
     }
     
     /**
@@ -47,15 +55,31 @@ public class CreditQueryService {
      */
     @Transactional
     public Company createCompany(Company company) {
-        // 计算企业年龄
-        if (company.getEstablishmentDate() != null) {
-            int age = Period.between(company.getEstablishmentDate(), LocalDate.now()).getYears();
-            company.setEstablishmentDate(LocalDate.now().minusYears(age));
-        }
-        // 计算信用评分和风险等级
         calculateCreditRisk(company);
-        companyMapper.insert(company);
-        return company;
+        return companyRepository.save(company);
+    }
+    
+    /**
+     * 更新企业信息
+     */
+    @Transactional
+    public Company updateCompany(Long companyId, Company company) {
+        Company existing = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException("企业不存在"));
+        if (company.getCompanyName() != null) existing.setCompanyName(company.getCompanyName());
+        if (company.getCreditCode() != null) existing.setCreditCode(company.getCreditCode());
+        if (company.getLegalPerson() != null) existing.setLegalPerson(company.getLegalPerson());
+        if (company.getRegisteredCapital() != null) existing.setRegisteredCapital(company.getRegisteredCapital());
+        if (company.getEstablishmentDate() != null) existing.setEstablishmentDate(company.getEstablishmentDate());
+        if (company.getBusinessStatus() != null) existing.setBusinessStatus(company.getBusinessStatus());
+        if (company.getIndustry() != null) existing.setIndustry(company.getIndustry());
+        if (company.getRegionCode() != null) existing.setRegionCode(company.getRegionCode());
+        if (company.getAddress() != null) existing.setAddress(company.getAddress());
+        if (company.getBusinessScope() != null) existing.setBusinessScope(company.getBusinessScope());
+        if (company.getEmployeeCount() != null) existing.setEmployeeCount(company.getEmployeeCount());
+        if (company.getAnnualRevenue() != null) existing.setAnnualRevenue(company.getAnnualRevenue());
+        calculateCreditRisk(existing);
+        return companyRepository.save(existing);
     }
     
     /**
@@ -64,7 +88,6 @@ public class CreditQueryService {
     public void calculateCreditRisk(Company company) {
         int score = 0;
         
-        // 基础资质评分 (30分)
         if (company.getEstablishmentDate() != null) {
             int years = Period.between(company.getEstablishmentDate(), LocalDate.now()).getYears();
             if (years >= 10) score += 30;
@@ -81,10 +104,8 @@ public class CreditQueryService {
         
         if ("存续".equals(company.getBusinessStatus())) score += 20;
         
-        // 经营状况 (10分)
         score += 10;
         
-        // 行业风险 (10分)
         if (company.getIndustry() != null) {
             if (company.getIndustry().contains("科技") || company.getIndustry().contains("金融")) {
                 score += 10;
@@ -95,17 +116,13 @@ public class CreditQueryService {
             }
         }
         
-        // 营收加分 (20分)
         if (company.getAnnualRevenue() != null) {
-            if (company.getAnnualRevenue().compareTo(new BigDecimal("1亿")) >= 0) score += 20;
-            else if (company.getAnnualRevenue().compareTo(new BigDecimal("5000万")) >= 0) score += 15;
-            else if (company.getAnnualRevenue().compareTo(new BigDecimal("1000万")) >= 0) score += 10;
+            if (company.getAnnualRevenue().compareTo(new BigDecimal("10000")) >= 0) score += 20;
+            else if (company.getAnnualRevenue().compareTo(new BigDecimal("5000")) >= 0) score += 15;
+            else if (company.getAnnualRevenue().compareTo(new BigDecimal("1000")) >= 0) score += 10;
         }
         
-        // 信用评分 0-100
         company.setCreditScore(Math.min(score, 100));
-        
-        // 风险等级
         company.setRiskLevel(calculateRiskLevel(score));
     }
     

@@ -1,8 +1,8 @@
 package com.wisdom.finance.risk.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wisdom.credit.entity.Company;
-import com.wisdom.credit.mapper.CompanyRepository;
+import com.wisdom.finance.credit.entity.Company;
+import com.wisdom.finance.credit.mapper.CompanyRepository;
 import com.wisdom.finance.loan.entity.LoanApplication;
 import com.wisdom.finance.loan.mapper.LoanApplicationRepository;
 import com.wisdom.finance.risk.entity.RiskEvaluation;

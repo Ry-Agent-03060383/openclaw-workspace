@@ -1,4 +1,4 @@
-package com.wisdom.approval.entity;
+package com.wisdom.finance.approval.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

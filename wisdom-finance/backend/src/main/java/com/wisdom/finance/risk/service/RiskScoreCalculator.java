@@ -1,6 +1,6 @@
 package com.wisdom.finance.risk.service;
 
-import com.wisdom.credit.entity.Company;
+import com.wisdom.finance.credit.entity.Company;
 import com.wisdom.finance.loan.entity.LoanApplication;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
