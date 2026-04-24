@@ -30,7 +30,6 @@
             overflow-x: hidden;
         }
         
-        /* 背景动画 */
         .bg-animation {
             position: fixed;
             top: 0;
@@ -59,7 +58,6 @@
             to { transform: rotate(360deg); }
         }
         
-        /* 导航栏 */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -77,6 +75,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            cursor: pointer;
         }
         
         .logo-icon {
@@ -120,9 +119,10 @@
             font-size: 14px;
             opacity: 0.8;
             transition: all 0.3s;
+            cursor: pointer;
         }
         
-        .nav-links a:hover {
+        .nav-links a:hover, .nav-links a.active {
             opacity: 1;
             color: var(--primary);
         }
@@ -130,6 +130,7 @@
         .nav-actions {
             display: flex;
             gap: 15px;
+            align-items: center;
         }
         
         .btn {
@@ -164,19 +165,71 @@
             box-shadow: 0 10px 30px rgba(0,212,170,0.3);
         }
         
-        /* 主内容区 */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
+        .main-content {
             padding: 120px 50px 50px;
-            position: relative;
+            min-height: 100vh;
         }
         
-        .hero-content {
-            max-width: 700px;
-            position: relative;
-            z-index: 2;
+        .hero {
+            text-align: center;
+            padding: 60px 0;
+        }
+        
+        .hero h2 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .hero h2 span {
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 40px;
+        }
+        
+        .quick-entry {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .entry-card {
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .entry-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0,212,170,0.2);
+        }
+        
+        .entry-card .icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .entry-card h4 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        
+        .entry-card p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
         }
         
         .ai-badge {
@@ -189,164 +242,18 @@
             border-radius: 20px;
             font-size: 13px;
             margin-bottom: 25px;
-            animation: fadeInUp 0.8s ease-out;
         }
         
         .ai-badge .sparkle {
             color: var(--accent);
         }
         
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .hero h2 {
-            font-size: 56px;
-            line-height: 1.2;
-            margin-bottom: 20px;
-            animation: fadeInUp 0.8s ease-out 0.2s both;
-        }
-        
-        .hero h2 span {
-            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .hero p {
-            font-size: 18px;
-            color: rgba(255,255,255,0.7);
-            line-height: 1.8;
-            margin-bottom: 40px;
-            animation: fadeInUp 0.8s ease-out 0.4s both;
-        }
-        
-        .hero-actions {
-            display: flex;
-            gap: 20px;
-            animation: fadeInUp 0.8s ease-out 0.6s both;
-        }
-        
-        .btn-large {
-            padding: 16px 40px;
-            font-size: 16px;
-        }
-        
-        /* AI 助手面板 */
-        .ai-panel {
-            position: fixed;
-            right: 30px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 380px;
-            background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 25px;
-            z-index: 100;
-            animation: slideIn 0.8s ease-out 0.8s both;
-        }
-        
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-50%) translateX(50px); }
-            to { opacity: 1; transform: translateY(-50%) translateX(0); }
-        }
-        
-        .ai-panel-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        
-        .ai-avatar {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, var(--secondary), var(--accent));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            animation: bounce 2s ease-in-out infinite;
-        }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-        
-        .ai-panel-title h3 {
-            font-size: 16px;
-            font-weight: 600;
-        }
-        
-        .ai-panel-title p {
-            font-size: 12px;
-            color: var(--primary);
-        }
-        
-        .ai-chat {
-            height: 200px;
-            overflow-y: auto;
-            margin-bottom: 15px;
-        }
-        
-        .ai-message {
-            background: var(--glass);
-            padding: 12px 16px;
-            border-radius: 12px;
-            font-size: 13px;
-            line-height: 1.6;
-            margin-bottom: 10px;
-        }
-        
-        .ai-input {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .ai-input input {
-            flex: 1;
-            padding: 12px 16px;
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 25px;
-            color: white;
-            font-size: 13px;
-        }
-        
-        .ai-input input::placeholder {
-            color: rgba(255,255,255,0.5);
-        }
-        
-        .ai-input button {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border: none;
-            border-radius: 50%;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .ai-input button:hover {
-            transform: scale(1.1);
-        }
-        
-        /* 统计卡片 */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
             padding: 50px;
-            margin-top: -50px;
-            position: relative;
-            z-index: 10;
+            margin-top: 50px;
         }
         
         .stat-card {
@@ -356,12 +263,6 @@
             border-radius: 16px;
             padding: 25px;
             text-align: center;
-            transition: all 0.3s;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
         }
         
         .stat-card .icon {
@@ -373,7 +274,6 @@
             font-size: 32px;
             font-weight: 700;
             color: var(--primary);
-            margin-bottom: 5px;
         }
         
         .stat-card .label {
@@ -381,72 +281,6 @@
             color: rgba(255,255,255,0.6);
         }
         
-        /* 功能模块 */
-        .features {
-            padding: 80px 50px;
-        }
-        
-        .section-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-        
-        .section-header h3 {
-            font-size: 36px;
-            margin-bottom: 15px;
-        }
-        
-        .section-header p {
-            font-size: 16px;
-            color: rgba(255,255,255,0.6);
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 25px;
-        }
-        
-        .feature-card {
-            background: rgba(0,0,0,0.3);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 30px;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--primary);
-            box-shadow: 0 20px 40px rgba(0,212,170,0.2);
-        }
-        
-        .feature-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            margin-bottom: 20px;
-        }
-        
-        .feature-card h4 {
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-        
-        .feature-card p {
-            font-size: 13px;
-            color: rgba(255,255,255,0.6);
-            line-height: 1.6;
-        }
-        
-        /* 登录模态框 */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -594,124 +428,193 @@
             border-color: var(--primary);
         }
         
-        /* 用户信息栏 */
-        .user-bar {
+        .user-info {
             display: none;
-            position: fixed;
-            top: 80px;
-            right: 30px;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 15px 25px;
-            z-index: 1001;
             align-items: center;
             gap: 15px;
+            background: rgba(0,0,0,0.3);
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
         }
         
-        .user-bar.active {
+        .user-info.active {
             display: flex;
         }
         
-        .user-bar .avatar {
-            width: 40px;
-            height: 40px;
+        .user-info .avatar {
+            width: 36px;
+            height: 36px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 16px;
         }
         
-        .user-bar .info .name {
+        .user-info .name {
             font-weight: 600;
         }
         
-        .user-bar .info .type {
+        .user-info .type {
             font-size: 12px;
             color: var(--primary);
         }
         
-        .user-bar .btn-logout {
-            padding: 8px 16px;
+        .user-info .logout-btn {
+            padding: 6px 16px;
             background: var(--glass);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
             color: white;
             font-size: 12px;
             cursor: pointer;
+            margin-left: 10px;
         }
         
-        /* 功能测试区 */
-        .test-section {
-            display: none;
-            padding: 30px 50px;
+        .user-info .logout-btn:hover {
+            background: #ff6b6b;
+            border-color: #ff6b6b;
         }
         
-        .test-section.active {
-            display: block;
-        }
-        
-        .test-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-        
-        .test-card {
-            background: rgba(0,0,0,0.3);
+        .ai-panel {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 380px;
+            background: rgba(0,0,0,0.4);
             backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 20px;
+            border-radius: 20px;
+            padding: 25px;
+            z-index: 100;
         }
         
-        .test-card h4 {
-            font-size: 14px;
-            margin-bottom: 15px;
+        .ai-panel.minimized {
+            display: none;
+        }
+        
+        .ai-panel-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .ai-avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+        
+        .ai-panel-title {
+            flex: 1;
+        }
+        
+        .ai-panel-title h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .ai-panel-title p {
+            font-size: 12px;
             color: var(--primary);
         }
         
-        .test-card .api-path {
-            font-size: 11px;
-            font-family: monospace;
+        .ai-minimize-btn {
             background: var(--glass);
-            padding: 4px 8px;
-            border-radius: 4px;
-            display: inline-block;
+            border: 1px solid var(--glass-border);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .ai-minimize-btn:hover {
+            background: var(--primary);
+            color: var(--dark);
+        }
+        
+        .ai-chat {
+            height: 180px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+        
+        .ai-message {
+            background: var(--glass);
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.6;
             margin-bottom: 10px;
         }
         
-        .test-card button {
-            padding: 8px 16px;
+        .ai-input {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .ai-input input {
+            flex: 1;
+            padding: 12px 16px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            color: white;
+            font-size: 13px;
+        }
+        
+        .ai-input input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .ai-input button {
+            width: 45px;
+            height: 45px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             border: none;
-            border-radius: 8px;
-            color: var(--dark);
-            font-size: 12px;
-            font-weight: 600;
+            border-radius: 50%;
+            color: white;
+            font-size: 18px;
             cursor: pointer;
-            margin-bottom: 10px;
         }
         
-        .test-card .response {
-            background: #0a0a0a;
-            padding: 10px;
-            border-radius: 8px;
-            font-family: monospace;
-            font-size: 11px;
-            max-height: 120px;
-            overflow-y: auto;
-            color: var(--primary);
+        .ai-float-btn {
+            display: none;
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 15px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            z-index: 100;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 30px rgba(0,212,170,0.3);
         }
         
-        .test-card .response.error {
-            color: #ff6b6b;
+        .ai-float-btn.active {
+            display: flex;
         }
         
-        /* 页脚 */
+        .ai-float-btn span {
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
         .footer {
             text-align: center;
             padding: 40px;
@@ -724,12 +627,10 @@
     </style>
 </head>
 <body>
-    <!-- 背景动画 -->
     <div class="bg-animation"></div>
     
-    <!-- 导航栏 -->
     <nav class="navbar">
-        <div class="logo">
+        <div class="logo" onclick="showPage('home')">
             <div class="logo-icon">🏦</div>
             <div class="logo-text">
                 <h1>智慧金服系统</h1>
@@ -737,200 +638,240 @@
             </div>
         </div>
         <div class="nav-links">
-            <a href="#">首页</a>
-            <a href="#features">智能服务</a>
-            <a href="#stats">数据统计</a>
-            <a href="#">关于我们</a>
+            <a onclick="showPage('home')" class="active" id="navHome">首页</a>
+            <a onclick="checkLoginAndShow('loan')" id="navLoan">贷款服务</a>
+            <a onclick="checkLoginAndShow('credit')" id="navCredit">信用评估</a>
+            <a onclick="checkLoginAndShow('guarantee')" id="navGuarantee">担保服务</a>
+            <a onclick="checkLoginAndShow('bank')" id="navBank">银行产品</a>
         </div>
         <div class="nav-actions">
-            <button class="btn btn-ghost" onclick="openModal('login')">登录</button>
-            <button class="btn btn-primary" onclick="openModal('register')">立即体验</button>
+            <div class="user-info" id="userInfo">
+                <div class="avatar">👤</div>
+                <div>
+                    <div class="name" id="displayName"></div>
+                    <div class="type" id="displayType"></div>
+                </div>
+                <button class="logout-btn" onclick="handleLogout()">退出</button>
+            </div>
+            <button class="btn btn-ghost" id="loginBtn" onclick="openModal('login')">登录</button>
         </div>
     </nav>
     
-    <!-- 主内容区 -->
-    <section class="hero">
-        <div class="hero-content">
-            <div class="ai-badge">
-                <span class="sparkle">✨</span>
-                <span>AI驱动的智能金融平台</span>
+    <div class="main-content">
+        <!-- 首页 -->
+        <div id="pageHome">
+            <div class="hero">
+                <div class="ai-badge">
+                    <span class="sparkle">✨</span>
+                    <span>AI驱动的智能金融平台</span>
+                </div>
+                <h2>智能匹配 · 精准<br><span>高效融资</span></h2>
+                <p>基于人工智能技术，为企业提供智能贷款匹配、信用评估、风险预测等全方位金融服务</p>
+                
+                <div class="quick-entry">
+                    <div class="entry-card" onclick="checkLoginAndShow('loan')">
+                        <div class="icon">💳</div>
+                        <h4>智能贷款</h4>
+                        <p>AI智能匹配最佳贷款产品</p>
+                    </div>
+                    <div class="entry-card" onclick="checkLoginAndShow('credit')">
+                        <div class="icon">📊</div>
+                        <h4>信用评估</h4>
+                        <p>多维度AI信用精准评估</p>
+                    </div>
+                    <div class="entry-card" onclick="checkLoginAndShow('guarantee')">
+                        <div class="icon">🤝</div>
+                        <h4>担保服务</h4>
+                        <p>智能匹配担保机构</p>
+                    </div>
+                    <div class="entry-card" onclick="checkLoginAndShow('bank')">
+                        <div class="icon">🏛️</div>
+                        <h4>银行产品</h4>
+                        <p>多家银行产品汇聚</p>
+                    </div>
+                </div>
             </div>
-            <h2>智能匹配 · 精准<br><span>高效融资</span></h2>
-            <p>基于人工智能技术，为企业提供智能贷款匹配、信用评估、风险预测等全方位金融服务。让融资更简单，让发展更高效。</p>
-            <div class="hero-actions">
-                <button class="btn btn-primary btn-large" onclick="openModal('login')">开始使用</button>
-                <button class="btn btn-ghost btn-large" onclick="scrollToFeatures()">了解更多</button>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="icon">🏢</div>
+                    <div class="value">128+</div>
+                    <div class="label">入驻企业</div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon">🏦</div>
+                    <div class="value">36+</div>
+                    <div class="label">合作银行</div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon">💰</div>
+                    <div class="value">5.2亿</div>
+                    <div class="label">撮合金额</div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon">⭐</div>
+                    <div class="value">95%</div>
+                    <div class="label">用户满意度</div>
+                </div>
             </div>
         </div>
         
-        <!-- AI 助手面板 -->
-        <div class="ai-panel">
-            <div class="ai-panel-header">
-                <div class="ai-avatar">🤖</div>
-                <div class="ai-panel-title">
-                    <h3>AI 智能助手</h3>
-                    <p>在线 · Powered by GPT-4</p>
+        <!-- 贷款服务页面 -->
+        <div id="pageLoan" class="hidden">
+            <div class="hero">
+                <h2>💳 智能贷款服务</h2>
+                <p>AI智能匹配最适合您的贷款产品</p>
+            </div>
+            <div class="quick-entry">
+                <div class="entry-card" onclick="testApi('/api/loan/products', 'loanRes')">
+                    <div class="icon">📋</div>
+                    <h4>贷款产品</h4>
+                    <p>查看所有贷款产品</p>
+                </div>
+                <div class="entry-card" onclick="testApi('/api/loan/apply', 'applyRes')">
+                    <div class="icon">✍️</div>
+                    <h4>申请贷款</h4>
+                    <p>提交贷款申请</p>
+                </div>
+                <div class="entry-card" onclick="testApi('/api/loan/my', 'myLoanRes')">
+                    <div class="icon">📝</div>
+                    <h4>我的贷款</h4>
+                    <p>查看申请记录</p>
+                </div>
+                <div class="entry-card" onclick="testApi('/api/approval/history', 'approvalRes')">
+                    <div class="icon">⏰</div>
+                    <h4>审批进度</h4>
+                    <p>查看审批状态</p>
                 </div>
             </div>
-            <div class="ai-chat" id="aiChat">
-                <div class="ai-message">
-                    你好！我是智慧金服AI助手。我可以帮你：
-                    <br>• 推荐最适合的贷款产品
-                    <br>• 解答金融相关问题
-                    <br>• 指导业务流程操作
-                    <br><br>有什么可以帮你的？
+            <div style="max-width: 800px; margin: 40px auto; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 16px;">
+                <h3 style="margin-bottom: 20px; color: var(--primary);">API测试结果</h3>
+                <pre id="loanRes" style="color: var(--primary); font-size: 12px; max-height: 300px; overflow: auto;">点击上方卡片测试API...</pre>
+            </div>
+        </div>
+        
+        <!-- 信用评估页面 -->
+        <div id="pageCredit" class="hidden">
+            <div class="hero">
+                <h2>📊 AI信用评估</h2>
+                <p>基于多维度数据的企业信用精准评估</p>
+            </div>
+            <div class="quick-entry">
+                <div class="entry-card" onclick="testApi('/api/credit/companies', 'creditRes')">
+                    <div class="icon">🏢</div>
+                    <h4>企业信用</h4>
+                    <p>查询企业信用信息</p>
+                </div>
+                <div class="entry-card" onclick="testApi('/api/credit/report', 'reportRes')">
+                    <div class="icon">📄</div>
+                    <h4>信用报告</h4>
+                    <p>生成信用评估报告</p>
+                </div>
+                <div class="entry-card" onclick="testApi('/api/credit/score', 'scoreRes')">
+                    <div class="icon">📈</div>
+                    <h4>信用评分</h4>
+                    <p>查看信用评分详情</p>
+                </div>
+                <div class="entry-card" onclick="testApi('/api/risk/evaluation', 'riskRes')">
+                    <div class="icon">⚠️</div>
+                    <h4>风险评估</h4>
+                    <p>AI风险预警检测</p>
                 </div>
             </div>
-            <div class="ai-input">
-                <input type="text" id="aiInput" placeholder="请输入您的问题...">
-                <button onclick="sendAIMessage()">➤</button>
+            <div style="max-width: 800px; margin: 40px auto; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 16px;">
+                <h3 style="margin-bottom: 20px; color: var(--primary);">API测试结果</h3>
+                <pre id="creditRes" style="color: var(--primary); font-size: 12px; max-height: 300px; overflow: auto;">点击上方卡片测试API...</pre>
             </div>
         </div>
-    </section>
-    
-    <!-- 统计卡片 -->
-    <div class="stats-grid" id="stats">
-        <div class="stat-card">
-            <div class="icon">🏢</div>
-            <div class="value">128+</div>
-            <div class="label">入驻企业</div>
+        
+        <!-- 担保服务页面 -->
+        <div id="pageGuarantee" class="hidden">
+            <div class="hero">
+                <h2>🤝 担保服务</h2>
+                <p>智能匹配担保机构，降低融资门槛</p>
+            </div>
+            <div class="quick-entry">
+                <div class="entry-card" onclick="testApi('/api/guarantee/list', 'guaranteeRes')">
+                    <div class="icon">📋</div>
+                    <h4>担保机构</h4>
+                    <p>查看担保机构列表</p>
+                </div>
+                <div class="entry-card" onclick="testApi('/api/guarantee/apply', 'guaApplyRes')">
+                    <div class="icon">✍️</div>
+                    <h4>申请担保</h4>
+                    <p>提交担保申请</p>
+                </div>
+                <div class="entry-card" onclick="testApi('/api/guarantee/my', 'myGuaRes')">
+                    <div class="icon">📝</div>
+                    <h4>我的担保</h4>
+                    <p>查看担保申请记录</p>
+                </div>
+            </div>
+            <div style="max-width: 800px; margin: 40px auto; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 16px;">
+                <h3 style="margin-bottom: 20px; color: var(--primary);">API测试结果</h3>
+                <pre id="guaranteeRes" style="color: var(--primary); font-size: 12px; max-height: 300px; overflow: auto;">点击上方卡片测试API...</pre>
+            </div>
         </div>
-        <div class="stat-card">
-            <div class="icon">🏦</div>
-            <div class="value">36+</div>
-            <div class="label">合作银行</div>
-        </div>
-        <div class="stat-card">
-            <div class="icon">💰</div>
-            <div class="value">5.2亿</div>
-            <div class="label">撮合金额</div>
-        </div>
-        <div class="stat-card">
-            <div class="icon">⭐</div>
-            <div class="value">95%</div>
-            <div class="label">用户满意度</div>
+        
+        <!-- 银行产品页面 -->
+        <div id="pageBank" class="hidden">
+            <div class="hero">
+                <h2>🏛️ 银行产品</h2>
+                <p>多家银行产品汇聚，智能推送最优方案</p>
+            </div>
+            <div class="quick-entry">
+                <div class="entry-card" onclick="testApi('/api/bank/banks', 'bankRes')">
+                    <div class="icon">🏦</div>
+                    <h4>银行列表</h4>
+                    <p>查看合作银行</p>
+                </div>
+                <div class="entry-card" onclick="testApi('/api/bank/products', 'bankProdRes')">
+                    <div class="icon">💳</div>
+                    <h4>银行产品</h4>
+                    <p>查看银行特色产品</p>
+                </div>
+                <div class="entry-card" onclick="testApi('/api/bank/match', 'matchRes')">
+                    <div class="icon">✨</div>
+                    <h4>AI智能匹配</h4>
+                    <p>AI推荐最优产品</p>
+                </div>
+            </div>
+            <div style="max-width: 800px; margin: 40px auto; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 16px;">
+                <h3 style="margin-bottom: 20px; color: var(--primary);">API测试结果</h3>
+                <pre id="bankRes" style="color: var(--primary); font-size: 12px; max-height: 300px; overflow: auto;">点击上方卡片测试API...</pre>
+            </div>
         </div>
     </div>
     
-    <!-- 功能模块 -->
-    <section class="features" id="features">
-        <div class="section-header">
-            <h3>智能服务矩阵</h3>
-            <p>全方位AI驱动的金融服务解决方案</p>
+    <!-- AI助手 -->
+    <div class="ai-panel" id="aiPanel">
+        <div class="ai-panel-header">
+            <div class="ai-avatar">🤖</div>
+            <div class="ai-panel-title">
+                <h3>AI 智能助手</h3>
+                <p>在线 · Powered by GPT-4</p>
+            </div>
+            <button class="ai-minimize-btn" onclick="toggleAI()">➖</button>
         </div>
-        <div class="features-grid">
-            <div class="feature-card" onclick="openModal('login')">
-                <div class="feature-icon">💳</div>
-                <h4>智能贷款</h4>
-                <p>AI智能匹配最佳贷款产品，一键申请，全程线上审批</p>
-            </div>
-            <div class="feature-card" onclick="openModal('login')">
-                <div class="feature-icon">📊</div>
-                <h4>信用评估</h4>
-                <p>多维度AI信用评估，为企业精准画像</p>
-            </div>
-            <div class="feature-card" onclick="openModal('login')">
-                <div class="feature-icon">🤝</div>
-                <h4>担保服务</h4>
-                <p>智能匹配担保机构，降低融资门槛</p>
-            </div>
-            <div class="feature-card" onclick="openModal('login')">
-                <div class="feature-icon">🏛️</div>
-                <h4>银行直连</h4>
-                <p>多家银行产品汇聚，智能推送最优方案</p>
-            </div>
-            <div class="feature-card" onclick="openModal('login')">
-                <div class="feature-icon">📈</div>
-                <h4>风险预测</h4>
-                <p>AI风险预警模型，帮助企业规避金融风险</p>
-            </div>
-            <div class="feature-card" onclick="openModal('login')">
-                <div class="feature-icon">🔧</div>
-                <h4>第三方服务</h4>
-                <p>财税法等企业服务一站式订阅</p>
-            </div>
-            <div class="feature-card" onclick="openModal('login')">
-                <div class="feature-icon">📱</div>
-                <h4>移动办公</h4>
-                <p>随时随地管理贷款申请和审批流程</p>
-            </div>
-            <div class="feature-card" onclick="openModal('login')">
-                <div class="feature-icon">🔒</div>
-                <h4>数据安全</h4>
-                <p>企业级数据加密保护，安全可靠</p>
+        <div class="ai-chat" id="aiChat">
+            <div class="ai-message">
+                你好！我是智慧金服AI助手。我可以帮你：
+                <br>• 推荐最适合的贷款产品
+                <br>• 解答金融相关问题
+                <br>• 指导业务流程操作
+                <br><br>有什么可以帮你的？
             </div>
         </div>
-    </section>
+        <div class="ai-input">
+            <input type="text" id="aiInput" placeholder="请输入您的问题...">
+            <button onclick="sendAI()">➤</button>
+        </div>
+    </div>
     
-    <!-- 功能测试区（登录后显示） -->
-    <section class="test-section" id="testSection">
-        <div class="section-header">
-            <h3>🧪 功能测试面板</h3>
-            <p>登录后可测试所有API接口</p>
-        </div>
-        <div class="test-grid">
-            <div class="test-card">
-                <h4>👥 用户模块</h4>
-                <div class="api-path">GET /api/user/list</div>
-                <button onclick="testApi('/api/user/list', 'res1')">测试</button>
-                <div class="response" id="res1">点击测试按钮...</div>
-            </div>
-            <div class="test-card">
-                <h4>👥 农户列表</h4>
-                <div class="api-path">GET /api/user/farmers</div>
-                <button onclick="testApi('/api/user/farmers', 'res2')">测试</button>
-                <div class="response" id="res2">点击测试按钮...</div>
-            </div>
-            <div class="test-card">
-                <h4>👥 企业列表</h4>
-                <div class="api-path">GET /api/user/enterprises</div>
-                <button onclick="testApi('/api/user/enterprises', 'res3')">测试</button>
-                <div class="response" id="res3">点击测试按钮...</div>
-            </div>
-            <div class="test-card">
-                <h4>💰 贷款产品</h4>
-                <div class="api-path">GET /api/loan/products</div>
-                <button onclick="testApi('/api/loan/products', 'res4')">测试</button>
-                <div class="response" id="res4">点击测试按钮...</div>
-            </div>
-            <div class="test-card">
-                <h4>🏦 银行列表</h4>
-                <div class="api-path">GET /api/bank/banks</div>
-                <button onclick="testApi('/api/bank/banks', 'res5')">测试</button>
-                <div class="response" id="res5">点击测试按钮...</div>
-            </div>
-            <div class="test-card">
-                <h4>📋 订阅服务</h4>
-                <div class="api-path">GET /api/subscription/services</div>
-                <button onclick="testApi('/api/subscription/services', 'res6')">测试</button>
-                <div class="response" id="res6">点击测试按钮...</div>
-            </div>
-            <div class="test-card">
-                <h4>⚙️ 系统配置</h4>
-                <div class="api-path">GET /api/admin/config/list</div>
-                <button onclick="testApi('/api/admin/config/list', 'res7')">测试</button>
-                <div class="response" id="res7">点击测试按钮...</div>
-            </div>
-            <div class="test-card">
-                <h4>🔧 第三方服务</h4>
-                <div class="api-path">GET /api/thirdparty/services</div>
-                <button onclick="testApi('/api/thirdparty/services', 'res8')">测试</button>
-                <div class="response" id="res8">点击测试按钮...</div>
-            </div>
-            <div class="test-card">
-                <h4>📊 统计数据</h4>
-                <div class="api-path">GET /api/admin/statistics/list</div>
-                <button onclick="testApi('/api/admin/statistics/list', 'res9')">测试</button>
-                <div class="response" id="res9">点击测试按钮...</div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- 页脚 -->
-    <footer class="footer">
-        <p>© 2026 智慧金服系统 - 焦作市智慧金融服务平台 | AI驱动的智能金融平台</p>
-        <p>主管部门：焦作市发展和改革委员会 | 建设单位：焦作市智慧金融服务有限公司</p>
-    </footer>
+    <div class="ai-float-btn" id="aiFloat" onclick="toggleAI()">
+        <div class="ai-avatar">🤖</div>
+        <span>AI助手</span>
+    </div>
     
     <!-- 登录/注册模态框 -->
     <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
@@ -944,7 +885,6 @@
                 <div class="auth-tab" onclick="switchAuthTab('register')" id="tabRegister">注册</div>
             </div>
             
-            <!-- 登录表单 -->
             <form id="loginForm" onsubmit="handleLogin(event)">
                 <div class="form-group">
                     <label>用户名</label>
@@ -957,7 +897,6 @@
                 <button type="submit" class="btn btn-primary" style="width: 100%;">登录</button>
             </form>
             
-            <!-- 注册表单 -->
             <form id="registerForm" class="hidden" onsubmit="handleRegister(event)">
                 <div class="form-group">
                     <label>用户名</label>
@@ -1005,25 +944,18 @@
                     <span class="quick-user-tag" onclick="quickLogin('bank')">bank</span>
                     <span class="quick-user-tag" onclick="quickLogin('enterprise')">enterprise</span>
                     <span class="quick-user-tag" onclick="quickLogin('farmer')">farmer</span>
-                    <span class="quick-user-tag" onclick="quickLogin('government')">government</span>
-                    <span class="quick-user-tag" onclick="quickLogin('thirdparty')">thirdparty</span>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- 用户信息栏 -->
-    <div class="user-bar" id="userBar">
-        <div class="avatar">👤</div>
-        <div class="info">
-            <div class="name" id="displayName"></div>
-            <div class="type" id="displayType"></div>
-        </div>
-        <button class="btn-logout" onclick="handleLogout()">退出</button>
-    </div>
+    <footer class="footer">
+        <p>© 2026 智慧金服系统 - 焦作市智慧金融服务平台 | AI驱动的智能金融平台</p>
+    </footer>
     
     <script>
         let currentUser = null;
+        let currentPage = 'home';
         
         const userTypeNames = {
             'ADMIN': '平台管理员',
@@ -1035,19 +967,39 @@
             'THIRD_PARTY': '第三方服务商'
         };
         
-        // 打开模态框
+        function showPage(page) {
+            currentPage = page;
+            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+            document.getElementById('nav' + page.charAt(0).toUpperCase() + page.slice(1)).classList.add('active');
+            
+            document.getElementById('pageHome').classList.add('hidden');
+            document.getElementById('pageLoan').classList.add('hidden');
+            document.getElementById('pageCredit').classList.add('hidden');
+            document.getElementById('pageGuarantee').classList.add('hidden');
+            document.getElementById('pageBank').classList.add('hidden');
+            
+            document.getElementById('page' + page.charAt(0).toUpperCase() + page.slice(1)).classList.remove('hidden');
+        }
+        
+        function checkLoginAndShow(page) {
+            if (!currentUser) {
+                currentPage = page;
+                openModal('login');
+                return;
+            }
+            showPage(page);
+        }
+        
         function openModal(type) {
             document.getElementById('modalOverlay').classList.add('active');
             switchAuthTab(type);
         }
         
-        // 关闭模态框
         function closeModal(event) {
             if (event && event.target !== event.currentTarget) return;
             document.getElementById('modalOverlay').classList.remove('active');
         }
         
-        // 切换认证标签
         function switchAuthTab(tab) {
             document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
             document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
@@ -1056,14 +1008,12 @@
             document.getElementById('modalTitle').textContent = tab === 'login' ? '登录' : '注册';
         }
         
-        // 快速登录
         function quickLogin(username) {
             document.getElementById('loginUsername').value = username;
             document.getElementById('loginPassword').value = '123456';
             login(username, '123456');
         }
         
-        // 处理登录
         function handleLogin(event) {
             event.preventDefault();
             const username = document.getElementById('loginUsername').value;
@@ -1071,9 +1021,7 @@
             login(username, password);
         }
         
-        // 登录
         function login(username, password) {
-            console.log('开始登录:', username);
             const formData = new URLSearchParams();
             formData.append('username', username);
             formData.append('password', password);
@@ -1083,29 +1031,25 @@
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: formData
             })
-            .then(response => {
-                console.log('响应状态:', response.status);
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                console.log('登录返回:', data);
                 if (data.code === 200) {
                     currentUser = data.data;
-                    console.log('用户信息:', currentUser);
                     closeModal();
                     showLoggedInState();
-                    alert('登录成功！欢迎 ' + currentUser.realName);
+                    const targetPage = currentPage;
+                    if (targetPage && targetPage !== 'home') {
+                        showPage(targetPage);
+                    }
                 } else {
                     alert('登录失败: ' + data.message);
                 }
             })
             .catch(error => {
-                console.error('登录错误:', error);
                 alert('登录失败: ' + error.message);
             });
         }
         
-        // 处理注册
         function handleRegister(event) {
             event.preventDefault();
             const password = document.getElementById('regPassword').value;
@@ -1145,33 +1089,48 @@
             });
         }
         
-        // 显示登录后状态
         function showLoggedInState() {
-            document.getElementById('userBar').classList.add('active');
+            document.getElementById('userInfo').classList.add('active');
+            document.getElementById('loginBtn').style.display = 'none';
             document.getElementById('displayName').textContent = currentUser.realName;
             document.getElementById('displayType').textContent = userTypeNames[currentUser.userType] || currentUser.userType;
-            document.getElementById('testSection').classList.add('active');
         }
         
-        // 退出登录
         function handleLogout() {
             currentUser = null;
-            document.getElementById('userBar').classList.remove('active');
-            document.getElementById('testSection').classList.remove('active');
-            document.getElementById('loginUsername').value = '';
-            document.getElementById('loginPassword').value = '';
+            document.getElementById('userInfo').classList.remove('active');
+            document.getElementById('loginBtn').style.display = 'block';
+            showPage('home');
         }
         
-        // 滚动到功能区
-        function scrollToFeatures() {
-            document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+        function toggleAI() {
+            const panel = document.getElementById('aiPanel');
+            const float = document.getElementById('aiFloat');
+            const btn = document.querySelector('.ai-minimize-btn');
+            panel.classList.toggle('minimized');
+            float.classList.toggle('active');
+            if (panel.classList.contains('minimized')) {
+                btn.textContent = '➕';
+            } else {
+                btn.textContent = '➖';
+            }
         }
         
-        // 测试API
+        function sendAI() {
+            const input = document.getElementById('aiInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            const chat = document.getElementById('aiChat');
+            chat.innerHTML += `<div class="ai-message" style="background: var(--secondary); color: white;">${message}</div>`;
+            chat.innerHTML += `<div class="ai-message">🤖 感谢您的留言！</div>`;
+            input.value = '';
+            chat.scrollTop = chat.scrollHeight;
+        }
+        
         function testApi(url, resultId) {
             const resultDiv = document.getElementById(resultId);
             resultDiv.textContent = '正在请求...';
-            resultDiv.className = 'response';
             
             fetch('http://localhost:8080' + url, {
                 method: 'GET',
@@ -1179,32 +1138,15 @@
             })
             .then(response => response.json())
             .then(data => {
-                const jsonStr = JSON.stringify(data, null, 2);
-                resultDiv.textContent = jsonStr.substring(0, 500) + (jsonStr.length > 500 ? '...' : '');
-                resultDiv.className = data.code === 200 ? 'response' : 'response error';
+                resultDiv.textContent = JSON.stringify(data, null, 2);
             })
             .catch(error => {
                 resultDiv.textContent = '请求失败: ' + error.message;
-                resultDiv.className = 'response error';
             });
         }
         
-        // AI 消息
-        function sendAIMessage() {
-            const input = document.getElementById('aiInput');
-            const message = input.value.trim();
-            if (!message) return;
-            
-            const chat = document.getElementById('aiChat');
-            chat.innerHTML += `<div class="ai-message" style="background: var(--secondary); color: white;">${message}</div>`;
-            chat.innerHTML += `<div class="ai-message">🤖 感谢您的留言！请先登录系统，即可体验完整的AI智能服务。</div>`;
-            input.value = '';
-            chat.scrollTop = chat.scrollHeight;
-        }
-        
-        // 回车发送AI消息
         document.getElementById('aiInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') sendAIMessage();
+            if (e.key === 'Enter') sendAI();
         });
     </script>
 </body>
