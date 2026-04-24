@@ -277,8 +277,9 @@
             <div class="module">
                 <h3>审批模块</h3>
                 <div class="api-test">
-                    <h4>获取审批规则</h4>
-                    <button onclick="getApprovalRules()">测试</button>
+                    <h4>获取贷款申请历史</h4>
+                    <input type="number" id="appId" placeholder="申请ID" value="1">
+                    <button onclick="getApprovalHistory()">测试</button>
                     <div id="approvalRulesResponse" class="response"></div>
                 </div>
             </div>
@@ -287,8 +288,9 @@
             <div class="module">
                 <h3>担保模块</h3>
                 <div class="api-test">
-                    <h4>获取担保列表</h4>
-                    <button onclick="getGuarantees()">测试</button>
+                    <h4>获取担保申请</h4>
+                    <input type="number" id="guaAppId" placeholder="担保申请ID" value="1">
+                    <button onclick="getGuaranteeApplication()">测试</button>
                     <div id="guaranteesResponse" class="response"></div>
                 </div>
             </div>
@@ -376,10 +378,11 @@
             })
             .then(response => response.json())
             .then(data => {
-                responseDiv.className = 'response ' + (data.success ? 'success' : 'error');
+                // code为200表示成功
+                const isSuccess = data.code === 200 || data.code === undefined;
+                responseDiv.className = 'response ' + (isSuccess ? 'success' : 'error');
                 responseDiv.textContent = JSON.stringify(data, null, 2);
-                if (data.success) {
-                    token = data.data.token || '';
+                if (data.code === 200) {
                     alert('登录成功！');
                 }
             })
@@ -407,7 +410,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                responseDiv.className = 'response ' + (data.success ? 'success' : 'error');
+                responseDiv.className = 'response ' + (data.code === 200 ? 'success' : 'error');
                 responseDiv.textContent = JSON.stringify(data, null, 2);
             })
             .catch(error => {
@@ -450,13 +453,15 @@
         }
         
         // 审批模块测试
-        function getApprovalRules() {
-            callApi('http://localhost:8080/api/approval/rules', 'GET', null, 'approvalRulesResponse');
+        function getApprovalHistory() {
+            const appId = document.getElementById('appId').value;
+            callApi(`http://localhost:8080/api/approval/${appId}/history`, 'GET', null, 'approvalRulesResponse');
         }
         
         // 担保模块测试
-        function getGuarantees() {
-            callApi('http://localhost:8080/api/guarantee/guarantees', 'GET', null, 'guaranteesResponse');
+        function getGuaranteeApplication() {
+            const guaAppId = document.getElementById('guaAppId').value;
+            callApi(`http://localhost:8080/api/guarantee/application/${guaAppId}`, 'GET', null, 'guaranteesResponse');
         }
         
         // 银行模块测试

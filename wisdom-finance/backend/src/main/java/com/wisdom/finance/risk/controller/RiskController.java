@@ -3,7 +3,8 @@ package com.wisdom.finance.risk.controller;
 import com.wisdom.finance.risk.entity.RiskEvaluation;
 import com.wisdom.finance.risk.service.RiskService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +15,12 @@ import java.util.Map;
 /**
  * 风险评估控制器 - M6 风险评估模块
  */
-@Slf4j
 @RestController
 @RequestMapping("/api/risk")
 @RequiredArgsConstructor
 public class RiskController {
+    
+    private static final Logger log = LoggerFactory.getLogger(RiskController.class);
     
     private final RiskService riskService;
     

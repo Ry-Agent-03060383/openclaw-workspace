@@ -2,14 +2,10 @@ package com.wisdom.finance.user.entity;
 
 import com.wisdom.finance.common.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * 用户实体 - 支持多租户多角色
  */
-@Data
-@EquasAndHashCode(callSuper = true)
 @Entity
 @Table(name = "t_user")
 public class User extends BaseEntity {
@@ -30,7 +26,7 @@ public class User extends BaseEntity {
     private String email;
     
     @Enumerated(EnumType.STRING)
-    @Column(name = "user_type", nullable = false, length = 20)
+    @Column(name = "user_type", nullable = false, length = 25)
     private UserType userType;
     
     @Enumerated(EnumType.STRING)
@@ -64,4 +60,26 @@ public class User extends BaseEntity {
         DISABLED,  // 禁用
         PENDING    // 待审核
     }
+
+    // Getters and Setters
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+    public String getRealName() { return realName; }
+    public void setRealName(String realName) { this.realName = realName; }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public UserType getUserType() { return userType; }
+    public void setUserType(UserType userType) { this.userType = userType; }
+    public UserStatus getStatus() { return status; }
+    public void setStatus(UserStatus status) { this.status = status; }
+    public String getTenantId() { return tenantId; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+    public String getCityCode() { return cityCode; }
+    public void setCityCode(String cityCode) { this.cityCode = cityCode; }
+    public java.time.LocalDateTime getLastLoginTime() { return lastLoginTime; }
+    public void setLastLoginTime(java.time.LocalDateTime lastLoginTime) { this.lastLoginTime = lastLoginTime; }
 }

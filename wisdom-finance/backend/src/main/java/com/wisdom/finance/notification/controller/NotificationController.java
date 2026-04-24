@@ -3,9 +3,9 @@ package com.wisdom.finance.notification.controller;
 import com.wisdom.finance.notification.entity.Notification;
 import com.wisdom.finance.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
-import org.pringframework.data.domain.Page;
-import org.pringframework.http.ResponseEntity;
-import org.pringframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;

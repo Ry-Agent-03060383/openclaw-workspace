@@ -3,16 +3,12 @@ package com.wisdom.finance.guarantee.entity;
 import com.wisdom.finance.common.entity.BaseEntity;
 import com.wisdom.finance.loan.entity.LoanApplication;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
  * 担保实体 - 担保业务流程
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "t_guarantee")
 public class Guarantee extends BaseEntity {
@@ -65,4 +61,38 @@ public class Guarantee extends BaseEntity {
     
     @Column(name = "remark", length = 500)
     private String remark; // 备注
+
+    // Getters and Setters
+    public String getGuaranteeNo() { return guaranteeNo; }
+    public void setGuaranteeNo(String guaranteeNo) { this.guaranteeNo = guaranteeNo; }
+    public Long getApplicationId() { return applicationId; }
+    public void setApplicationId(Long applicationId) { this.applicationId = applicationId; }
+    public LoanApplication getLoanApplication() { return loanApplication; }
+    public void setLoanApplication(LoanApplication loanApplication) { this.loanApplication = loanApplication; }
+    public String getGuarantorType() { return guarantorType; }
+    public void setGuarantorType(String guarantorType) { this.guarantorType = guarantorType; }
+    public Long getGuarantorId() { return guarantorId; }
+    public void setGuarantorId(Long guarantorId) { this.guarantorId = guarantorId; }
+    public String getGuarantorName() { return guarantorName; }
+    public void setGuarantorName(String guarantorName) { this.guarantorName = guarantorName; }
+    public BigDecimal getGuaranteeAmount() { return guaranteeAmount; }
+    public void setGuaranteeAmount(BigDecimal guaranteeAmount) { this.guaranteeAmount = guaranteeAmount; }
+    public BigDecimal getGuaranteeRatio() { return guaranteeRatio; }
+    public void setGuaranteeRatio(BigDecimal guaranteeRatio) { this.guaranteeRatio = guaranteeRatio; }
+    public String getGuaranteeType() { return guaranteeType; }
+    public void setGuaranteeType(String guaranteeType) { this.guaranteeType = guaranteeType; }
+    public String getCollateralDesc() { return collateralDesc; }
+    public void setCollateralDesc(String collateralDesc) { this.collateralDesc = collateralDesc; }
+    public BigDecimal getCollateralValue() { return collateralValue; }
+    public void setCollateralValue(BigDecimal collateralValue) { this.collateralValue = collateralValue; }
+    public LocalDate getStartDate() { return startDate; }
+    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
+    public LocalDate getEndDate() { return endDate; }
+    public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+    public String getRiskLevel() { return riskLevel; }
+    public void setRiskLevel(String riskLevel) { this.riskLevel = riskLevel; }
+    public String getRemark() { return remark; }
+    public void setRemark(String remark) { this.remark = remark; }
 }

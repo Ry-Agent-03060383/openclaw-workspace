@@ -7,7 +7,8 @@ import com.wisdom.finance.user.mapper.EnterpriseRepository;
 import com.wisdom.finance.user.mapper.FarmerRepository;
 import com.wisdom.finance.user.mapper.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +19,11 @@ import java.util.List;
 /**
  * 用户服务 - 用户管理和角色业务流程
  */
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
     private final FarmerRepository farmerRepository;
@@ -245,5 +247,27 @@ public class UserService {
         userRepository.save(user);
         
         return user;
+    }
+    
+    /**
+     * 用户注册
+     */
+    public User registerUser(User user) {
+        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+            throw new RuntimeException("用户名不能为空");
+        }
+        if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
+            throw new RuntimeException("密码不能为空");
+        }
+        
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new RuntimeException("用户名已存在");
+        }
+        
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setStatus(User.UserStatus.ACTIVE);
+        user.setTenantId("system");
+        
+        return userRepository.save(user);
     }
 }

@@ -5,7 +5,8 @@ import com.wisdom.finance.credit.entity.Company;
 import com.wisdom.finance.credit.entity.CreditScoreModel;
 import com.wisdom.finance.credit.mapper.CreditScoreModelRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +19,11 @@ import java.util.Map;
 /**
  * 信用评分模型服务 - 信用评分模型管理和评分计算
  */
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CreditScoreModelService {
 
+    private static final Logger log = LoggerFactory.getLogger(CreditScoreModelService.class);
     private final CreditScoreModelRepository creditScoreModelRepository;
     private final ObjectMapper objectMapper;
 

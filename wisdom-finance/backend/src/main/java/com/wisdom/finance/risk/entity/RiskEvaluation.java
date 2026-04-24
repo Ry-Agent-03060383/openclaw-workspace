@@ -2,16 +2,12 @@ package com.wisdom.finance.risk.entity;
 
 import com.wisdom.finance.common.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
  * 风险评估实体 - M6 风险评估模块
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "t_risk_evaluation")
 public class RiskEvaluation extends BaseEntity {
@@ -114,4 +110,237 @@ public class RiskEvaluation extends BaseEntity {
     
     @Column(name = "evaluator", length = 50)
     private String evaluator; // 评估人/系统
+
+    // Getters and Setters
+    public String getEvaluationNo() {
+        return evaluationNo;
+    }
+
+    public void setEvaluationNo(String evaluationNo) {
+        this.evaluationNo = evaluationNo;
+    }
+
+    public String getEvaluationType() {
+        return evaluationType;
+    }
+
+    public void setEvaluationType(String evaluationType) {
+        this.evaluationType = evaluationType;
+    }
+
+    public Long getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
+    }
+
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getCreditCode() {
+        return creditCode;
+    }
+
+    public void setCreditCode(String creditCode) {
+        this.creditCode = creditCode;
+    }
+
+    public Integer getRiskScore() {
+        return riskScore;
+    }
+
+    public void setRiskScore(Integer riskScore) {
+        this.riskScore = riskScore;
+    }
+
+    public String getRiskLevel() {
+        return riskLevel;
+    }
+
+    public void setRiskLevel(String riskLevel) {
+        this.riskLevel = riskLevel;
+    }
+
+    public Integer getBasicQualificationScore() {
+        return basicQualificationScore;
+    }
+
+    public void setBasicQualificationScore(Integer basicQualificationScore) {
+        this.basicQualificationScore = basicQualificationScore;
+    }
+
+    public Integer getCreditRecordScore() {
+        return creditRecordScore;
+    }
+
+    public void setCreditRecordScore(Integer creditRecordScore) {
+        this.creditRecordScore = creditRecordScore;
+    }
+
+    public Integer getFinancialStatusScore() {
+        return financialStatusScore;
+    }
+
+    public void setFinancialStatusScore(Integer financialStatusScore) {
+        this.financialStatusScore = financialStatusScore;
+    }
+
+    public Integer getIndustryRiskScore() {
+        return industryRiskScore;
+    }
+
+    public void setIndustryRiskScore(Integer industryRiskScore) {
+        this.industryRiskScore = industryRiskScore;
+    }
+
+    public Integer getEstablishmentYears() {
+        return establishmentYears;
+    }
+
+    public void setEstablishmentYears(Integer establishmentYears) {
+        this.establishmentYears = establishmentYears;
+    }
+
+    public BigDecimal getRegisteredCapital() {
+        return registeredCapital;
+    }
+
+    public void setRegisteredCapital(BigDecimal registeredCapital) {
+        this.registeredCapital = registeredCapital;
+    }
+
+    public String getBusinessStatus() {
+        return businessStatus;
+    }
+
+    public void setBusinessStatus(String businessStatus) {
+        this.businessStatus = businessStatus;
+    }
+
+    public Integer getCreditScore() {
+        return creditScore;
+    }
+
+    public void setCreditScore(Integer creditScore) {
+        this.creditScore = creditScore;
+    }
+
+    public Integer getHistoricalOverdueCount() {
+        return historicalOverdueCount;
+    }
+
+    public void setHistoricalOverdueCount(Integer historicalOverdueCount) {
+        this.historicalOverdueCount = historicalOverdueCount;
+    }
+
+    public Integer getLawsuitCount() {
+        return lawsuitCount;
+    }
+
+    public void setLawsuitCount(Integer lawsuitCount) {
+        this.lawsuitCount = lawsuitCount;
+    }
+
+    public BigDecimal getAnnualRevenue() {
+        return annualRevenue;
+    }
+
+    public void setAnnualRevenue(BigDecimal annualRevenue) {
+        this.annualRevenue = annualRevenue;
+    }
+
+    public BigDecimal getDebtRatio() {
+        return debtRatio;
+    }
+
+    public void setDebtRatio(BigDecimal debtRatio) {
+        this.debtRatio = debtRatio;
+    }
+
+    public String getCashFlowStatus() {
+        return cashFlowStatus;
+    }
+
+    public void setCashFlowStatus(String cashFlowStatus) {
+        this.cashFlowStatus = cashFlowStatus;
+    }
+
+    public String getIndustry() {
+        return industry;
+    }
+
+    public void setIndustry(String industry) {
+        this.industry = industry;
+    }
+
+    public String getIndustryCycle() {
+        return industryCycle;
+    }
+
+    public void setIndustryCycle(String industryCycle) {
+        this.industryCycle = industryCycle;
+    }
+
+    public String getPolicyImpact() {
+        return policyImpact;
+    }
+
+    public void setPolicyImpact(String policyImpact) {
+        this.policyImpact = policyImpact;
+    }
+
+    public LocalDateTime getEvaluateTime() {
+        return evaluateTime;
+    }
+
+    public void setEvaluateTime(LocalDateTime evaluateTime) {
+        this.evaluateTime = evaluateTime;
+    }
+
+    public String getModelVersion() {
+        return modelVersion;
+    }
+
+    public void setModelVersion(String modelVersion) {
+        this.modelVersion = modelVersion;
+    }
+
+    public String getRiskReport() {
+        return riskReport;
+    }
+
+    public void setRiskReport(String riskReport) {
+        this.riskReport = riskReport;
+    }
+
+    public String getSuggestion() {
+        return suggestion;
+    }
+
+    public void setSuggestion(String suggestion) {
+        this.suggestion = suggestion;
+    }
+
+    public String getEvaluator() {
+        return evaluator;
+    }
+
+    public void setEvaluator(String evaluator) {
+        this.evaluator = evaluator;
+    }
 }

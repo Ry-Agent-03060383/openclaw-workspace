@@ -1,13 +1,11 @@
 package com.wisdom.finance.approval.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
  * 审批规则实体 - M5 自动化审批
  */
-@Data
 @Entity
 @Table(name = "t_approval_rule")
 public class ApprovalRule {
@@ -54,4 +52,28 @@ public class ApprovalRule {
         REJECT,          // 自动拒绝
         NEEDS_MANUAL     // 需要人工复审
     }
+    
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getRuleCode() { return ruleCode; }
+    public void setRuleCode(String ruleCode) { this.ruleCode = ruleCode; }
+    public String getRuleName() { return ruleName; }
+    public void setRuleName(String ruleName) { this.ruleName = ruleName; }
+    public String getRuleCondition() { return ruleCondition; }
+    public void setRuleCondition(String ruleCondition) { this.ruleCondition = ruleCondition; }
+    public String getRuleAction() { return ruleAction; }
+    public void setRuleAction(String ruleAction) { this.ruleAction = ruleAction; }
+    public Integer getPriority() { return priority; }
+    public void setPriority(Integer priority) { this.priority = priority; }
+    public Boolean getEnabled() { return enabled; }
+    public void setEnabled(Boolean enabled) { this.enabled = enabled; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public String getCreatedBy() { return createdBy; }
+    public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }

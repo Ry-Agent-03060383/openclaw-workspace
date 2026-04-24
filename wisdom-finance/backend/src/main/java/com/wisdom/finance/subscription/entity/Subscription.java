@@ -24,7 +24,7 @@ public class Subscription extends BaseEntity {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "service_id", insertable = false, updatable = false)
-    private SubscriptionService service;
+    private SubscriptionServiceEntity service;
     
     @Column(name = "user_id")
     private Long userId; // 用户ID
@@ -91,11 +91,11 @@ public class Subscription extends BaseEntity {
         this.serviceId = serviceId;
     }
     
-    public SubscriptionService getService() {
+    public SubscriptionServiceEntity getService() {
         return service;
     }
     
-    public void setService(SubscriptionService service) {
+    public void setService(SubscriptionServiceEntity service) {
         this.service = service;
     }
     

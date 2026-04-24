@@ -20,9 +20,9 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeRequests(authorize -> authorize
-                .requestMatchers("/api/**").permitAll()
-                .anyRequest().authenticated()
-            );
+                .anyRequest().permitAll()
+            )
+            .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()));
         
         return http.build();
     }

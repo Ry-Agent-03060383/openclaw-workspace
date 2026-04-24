@@ -61,4 +61,124 @@ public class BankProduct extends BaseEntity {
     
     @Column(name = "apply_url", length = 200)
     private String applyUrl; // 申请链接
+    
+    public String getProductCode() {
+        return productCode;
+    }
+    
+    public void setProductCode(String productCode) {
+        this.productCode = productCode;
+    }
+    
+    public String getProductName() {
+        return productName;
+    }
+    
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+    
+    public Long getBankId() {
+        return bankId;
+    }
+    
+    public void setBankId(Long bankId) {
+        this.bankId = bankId;
+    }
+    
+    public Bank getBank() {
+        return bank;
+    }
+    
+    public void setBank(Bank bank) {
+        this.bank = bank;
+    }
+    
+    public String getProductType() {
+        return productType;
+    }
+    
+    public void setProductType(String productType) {
+        this.productType = productType;
+    }
+    
+    public BigDecimal getMinAmount() {
+        return minAmount;
+    }
+    
+    public void setMinAmount(BigDecimal minAmount) {
+        this.minAmount = minAmount;
+    }
+    
+    public BigDecimal getMaxAmount() {
+        return maxAmount;
+    }
+    
+    public void setMaxAmount(BigDecimal maxAmount) {
+        this.maxAmount = maxAmount;
+    }
+    
+    public Integer getMinTermMonths() {
+        return minTermMonths;
+    }
+    
+    public void setMinTermMonths(Integer minTermMonths) {
+        this.minTermMonths = minTermMonths;
+    }
+    
+    public Integer getMaxTermMonths() {
+        return maxTermMonths;
+    }
+    
+    public void setMaxTermMonths(Integer maxTermMonths) {
+        this.maxTermMonths = maxTermMonths;
+    }
+    
+    public BigDecimal getInterestRateMin() {
+        return interestRateMin;
+    }
+    
+    public void setInterestRateMin(BigDecimal interestRateMin) {
+        this.interestRateMin = interestRateMin;
+    }
+    
+    public BigDecimal getInterestRateMax() {
+        return interestRateMax;
+    }
+    
+    public void setInterestRateMax(BigDecimal interestRateMax) {
+        this.interestRateMax = interestRateMax;
+    }
+    
+    public Integer getRequiredCreditScore() {
+        return requiredCreditScore;
+    }
+    
+    public void setRequiredCreditScore(Integer requiredCreditScore) {
+        this.requiredCreditScore = requiredCreditScore;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+    
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
+    public String getStatus() {
+        return status;
+    }
+    
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
+    public String getApplyUrl() {
+        return applyUrl;
+    }
+    
+    public void setApplyUrl(String applyUrl) {
+        this.applyUrl = applyUrl;
+    }
 }

@@ -7,7 +7,8 @@ import com.wisdom.finance.loan.entity.LoanApplication;
 import com.wisdom.finance.loan.mapper.LoanApplicationRepository;
 import com.wisdom.finance.risk.entity.RiskEvaluation;
 import com.wisdom.finance.risk.mapper.RiskEvaluationRepository;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +22,10 @@ import java.util.UUID;
 /**
  * 风险评估服务 - M6 风险评估模块
  */
-@Slf4j
 @Service
 public class RiskService {
+    
+    private static final Logger log = LoggerFactory.getLogger(RiskService.class);
 
     @Autowired
     private RiskEvaluationRepository riskEvaluationRepository;

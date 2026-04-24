@@ -4,7 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wisdom.finance.approval.entity.ApprovalRule;
 import com.wisdom.finance.loan.entity.LoanApplication;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -13,9 +14,10 @@ import java.util.*;
 /**
  * 简单规则引擎 - M5 自动化审批
  */
-@Slf4j
 @Component
 public class RuleEngine {
+    
+    private static final Logger log = LoggerFactory.getLogger(RuleEngine.class);
     
     private final ObjectMapper objectMapper;
     

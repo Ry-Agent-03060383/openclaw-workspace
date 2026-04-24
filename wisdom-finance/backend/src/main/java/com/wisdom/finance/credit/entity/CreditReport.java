@@ -83,4 +83,180 @@ public class CreditReport extends BaseEntity {
     
     @Column(name = "generation_time")
     private LocalDateTime generationTime; // 生成时间
+    
+    public String getReportNo() {
+        return reportNo;
+    }
+    
+    public void setReportNo(String reportNo) {
+        this.reportNo = reportNo;
+    }
+    
+    public Long getCompanyId() {
+        return companyId;
+    }
+    
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
+    }
+    
+    public Company getCompany() {
+        return company;
+    }
+    
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+    
+    public String getCompanyName() {
+        return companyName;
+    }
+    
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+    
+    public String getCreditCode() {
+        return creditCode;
+    }
+    
+    public void setCreditCode(String creditCode) {
+        this.creditCode = creditCode;
+    }
+    
+    public String getReportType() {
+        return reportType;
+    }
+    
+    public void setReportType(String reportType) {
+        this.reportType = reportType;
+    }
+    
+    public Integer getCreditScore() {
+        return creditScore;
+    }
+    
+    public void setCreditScore(Integer creditScore) {
+        this.creditScore = creditScore;
+    }
+    
+    public String getCreditLevel() {
+        return creditLevel;
+    }
+    
+    public void setCreditLevel(String creditLevel) {
+        this.creditLevel = creditLevel;
+    }
+    
+    public String getRiskLevel() {
+        return riskLevel;
+    }
+    
+    public void setRiskLevel(String riskLevel) {
+        this.riskLevel = riskLevel;
+    }
+    
+    public LocalDate getReportDate() {
+        return reportDate;
+    }
+    
+    public void setReportDate(LocalDate reportDate) {
+        this.reportDate = reportDate;
+    }
+    
+    public LocalDate getValidUntil() {
+        return validUntil;
+    }
+    
+    public void setValidUntil(LocalDate validUntil) {
+        this.validUntil = validUntil;
+    }
+    
+    public String getDataSources() {
+        return dataSources;
+    }
+    
+    public void setDataSources(String dataSources) {
+        this.dataSources = dataSources;
+    }
+    
+    public String getBasicInfo() {
+        return basicInfo;
+    }
+    
+    public void setBasicInfo(String basicInfo) {
+        this.basicInfo = basicInfo;
+    }
+    
+    public String getCreditHistory() {
+        return creditHistory;
+    }
+    
+    public void setCreditHistory(String creditHistory) {
+        this.creditHistory = creditHistory;
+    }
+    
+    public String getFinancialInfo() {
+        return financialInfo;
+    }
+    
+    public void setFinancialInfo(String financialInfo) {
+        this.financialInfo = financialInfo;
+    }
+    
+    public String getLegalInfo() {
+        return legalInfo;
+    }
+    
+    public void setLegalInfo(String legalInfo) {
+        this.legalInfo = legalInfo;
+    }
+    
+    public String getIndustryInfo() {
+        return industryInfo;
+    }
+    
+    public void setIndustryInfo(String industryInfo) {
+        this.industryInfo = industryInfo;
+    }
+    
+    public String getRiskAnalysis() {
+        return riskAnalysis;
+    }
+    
+    public void setRiskAnalysis(String riskAnalysis) {
+        this.riskAnalysis = riskAnalysis;
+    }
+    
+    public String getSuggestions() {
+        return suggestions;
+    }
+    
+    public void setSuggestions(String suggestions) {
+        this.suggestions = suggestions;
+    }
+    
+    public String getStatus() {
+        return status;
+    }
+    
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
+    public String getGeneratedBy() {
+        return generatedBy;
+    }
+    
+    public void setGeneratedBy(String generatedBy) {
+        this.generatedBy = generatedBy;
+    }
+    
+    public LocalDateTime getGenerationTime() {
+        return generationTime;
+    }
+    
+    public void setGenerationTime(LocalDateTime generationTime) {
+        this.generationTime = generationTime;
+    }
 }

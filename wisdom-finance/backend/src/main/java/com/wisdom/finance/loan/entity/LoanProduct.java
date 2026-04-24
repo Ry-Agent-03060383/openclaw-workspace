@@ -63,4 +63,132 @@ public class LoanProduct extends BaseEntity {
     
     @Column(name = "sort_order")
     private Integer sortOrder = 0;
+    
+    public String getProductName() {
+        return productName;
+    }
+    
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+    
+    public String getProductCode() {
+        return productCode;
+    }
+    
+    public void setProductCode(String productCode) {
+        this.productCode = productCode;
+    }
+    
+    public String getProductType() {
+        return productType;
+    }
+    
+    public void setProductType(String productType) {
+        this.productType = productType;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+    
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
+    public BigDecimal getMinAmount() {
+        return minAmount;
+    }
+    
+    public void setMinAmount(BigDecimal minAmount) {
+        this.minAmount = minAmount;
+    }
+    
+    public BigDecimal getMaxAmount() {
+        return maxAmount;
+    }
+    
+    public void setMaxAmount(BigDecimal maxAmount) {
+        this.maxAmount = maxAmount;
+    }
+    
+    public Integer getMinTermMonths() {
+        return minTermMonths;
+    }
+    
+    public void setMinTermMonths(Integer minTermMonths) {
+        this.minTermMonths = minTermMonths;
+    }
+    
+    public Integer getMaxTermMonths() {
+        return maxTermMonths;
+    }
+    
+    public void setMaxTermMonths(Integer maxTermMonths) {
+        this.maxTermMonths = maxTermMonths;
+    }
+    
+    public BigDecimal getInterestRateMin() {
+        return interestRateMin;
+    }
+    
+    public void setInterestRateMin(BigDecimal interestRateMin) {
+        this.interestRateMin = interestRateMin;
+    }
+    
+    public BigDecimal getInterestRateMax() {
+        return interestRateMax;
+    }
+    
+    public void setInterestRateMax(BigDecimal interestRateMax) {
+        this.interestRateMax = interestRateMax;
+    }
+    
+    public String getEligibleIndustry() {
+        return eligibleIndustry;
+    }
+    
+    public void setEligibleIndustry(String eligibleIndustry) {
+        this.eligibleIndustry = eligibleIndustry;
+    }
+    
+    public Integer getMinCreditScore() {
+        return minCreditScore;
+    }
+    
+    public void setMinCreditScore(Integer minCreditScore) {
+        this.minCreditScore = minCreditScore;
+    }
+    
+    public Integer getMinCompanyAge() {
+        return minCompanyAge;
+    }
+    
+    public void setMinCompanyAge(Integer minCompanyAge) {
+        this.minCompanyAge = minCompanyAge;
+    }
+    
+    public String getRequiredMaterials() {
+        return requiredMaterials;
+    }
+    
+    public void setRequiredMaterials(String requiredMaterials) {
+        this.requiredMaterials = requiredMaterials;
+    }
+    
+    public String getStatus() {
+        return status;
+    }
+    
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
+    public Integer getSortOrder() {
+        return sortOrder;
+    }
+    
+    public void setSortOrder(Integer sortOrder) {
+        this.sortOrder = sortOrder;
+    }
 }

@@ -1,7 +1,7 @@
 package com.wisdom.finance.subscription.service;
 
 import com.wisdom.finance.subscription.entity.Subscription;
-import com.wisdom.finance.subscription.entity.SubscriptionService;
+import com.wisdom.finance.subscription.entity.SubscriptionServiceEntity;
 import com.wisdom.finance.subscription.mapper.SubscriptionRepository;
 import com.wisdom.finance.subscription.mapper.SubscriptionServiceRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class SubscriptionService {
      * 创建订阅服务
      */
     @Transactional
-    public SubscriptionService createSubscriptionService(SubscriptionService service) {
+    public SubscriptionServiceEntity createSubscriptionService(SubscriptionServiceEntity service) {
         log.info("创建订阅服务: {}", service.getServiceName());
         
         service.setServiceCode(generateServiceCode());
@@ -50,10 +50,10 @@ public class SubscriptionService {
      * 更新订阅服务
      */
     @Transactional
-    public SubscriptionService updateSubscriptionService(Long serviceId, SubscriptionService service) {
+    public SubscriptionServiceEntity updateSubscriptionService(Long serviceId, SubscriptionServiceEntity service) {
         log.info("更新订阅服务，服务ID: {}", serviceId);
         
-        SubscriptionService existing = subscriptionServiceRepository.findById(serviceId)
+        SubscriptionServiceEntity existing = subscriptionServiceRepository.findById(serviceId)
                 .orElseThrow(() -> new RuntimeException("服务不存在"));
         
         if (service.getServiceName() != null) existing.setServiceName(service.getServiceName());
@@ -84,14 +84,14 @@ public class SubscriptionService {
     /**
      * 获取订阅服务
      */
-    public SubscriptionService getSubscriptionService(Long serviceId) {
+    public SubscriptionServiceEntity getSubscriptionService(Long serviceId) {
         return subscriptionServiceRepository.findById(serviceId).orElse(null);
     }
 
     /**
      * 获取订阅服务列表
      */
-    public List<SubscriptionService> getSubscriptionServices(String serviceType, String targetRole, String status) {
+    public List<SubscriptionServiceEntity> getSubscriptionServices(String serviceType, String targetRole, String status) {
         if (serviceType != null) {
             return subscriptionServiceRepository.findByServiceType(serviceType);
         } else if (targetRole != null) {
@@ -110,7 +110,7 @@ public class SubscriptionService {
     public Subscription createSubscription(Subscription subscription) {
         log.info("创建订阅");
         
-        SubscriptionService service = subscriptionServiceRepository.findById(subscription.getServiceId())
+        SubscriptionServiceEntity service = subscriptionServiceRepository.findById(subscription.getServiceId())
                 .orElseThrow(() -> new RuntimeException("服务不存在"));
         
         // 检查是否已存在活跃订阅
@@ -177,7 +177,7 @@ public class SubscriptionService {
         Subscription subscription = subscriptionRepository.findById(subscriptionId)
                 .orElseThrow(() -> new RuntimeException("订阅不存在"));
         
-        SubscriptionService service = subscriptionServiceRepository.findById(subscription.getServiceId())
+        SubscriptionServiceEntity service = subscriptionServiceRepository.findById(subscription.getServiceId())
                 .orElseThrow(() -> new RuntimeException("服务不存在"));
         
         subscription.setEndTime(subscription.getEndTime().plusDays(service.getDuration()));

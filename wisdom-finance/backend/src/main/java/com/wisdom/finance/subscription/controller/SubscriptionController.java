@@ -2,7 +2,7 @@ package com.wisdom.finance.subscription.controller;
 
 import com.wisdom.finance.common.controller.Result;
 import com.wisdom.finance.subscription.entity.Subscription;
-import com.wisdom.finance.subscription.entity.SubscriptionService;
+import com.wisdom.finance.subscription.entity.SubscriptionServiceEntity;
 import com.wisdom.finance.subscription.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +23,9 @@ public class SubscriptionController {
      * 创建订阅服务
      */
     @PostMapping("/service/create")
-    public Result<SubscriptionService> createSubscriptionService(@RequestBody SubscriptionService service) {
+    public Result<com.wisdom.finance.subscription.entity.SubscriptionServiceEntity> createSubscriptionService(@RequestBody com.wisdom.finance.subscription.entity.SubscriptionServiceEntity service) {
         try {
-            SubscriptionService created = subscriptionService.createSubscriptionService(service);
+            com.wisdom.finance.subscription.entity.SubscriptionServiceEntity created = subscriptionService.createSubscriptionService(service);
             return Result.success(created);
         } catch (RuntimeException e) {
             return Result.error(e.getMessage());
@@ -36,9 +36,9 @@ public class SubscriptionController {
      * 更新订阅服务
      */
     @PutMapping("/service/{serviceId}")
-    public Result<SubscriptionService> updateSubscriptionService(@PathVariable Long serviceId, @RequestBody SubscriptionService service) {
+    public Result<com.wisdom.finance.subscription.entity.SubscriptionServiceEntity> updateSubscriptionService(@PathVariable Long serviceId, @RequestBody com.wisdom.finance.subscription.entity.SubscriptionServiceEntity service) {
         try {
-            SubscriptionService updated = subscriptionService.updateSubscriptionService(serviceId, service);
+            com.wisdom.finance.subscription.entity.SubscriptionServiceEntity updated = subscriptionService.updateSubscriptionService(serviceId, service);
             return Result.success(updated);
         } catch (RuntimeException e) {
             return Result.error(e.getMessage());
@@ -49,8 +49,8 @@ public class SubscriptionController {
      * 获取订阅服务详情
      */
     @GetMapping("/service/{serviceId}")
-    public Result<SubscriptionService> getSubscriptionService(@PathVariable Long serviceId) {
-        SubscriptionService service = subscriptionService.getSubscriptionService(serviceId);
+    public Result<com.wisdom.finance.subscription.entity.SubscriptionServiceEntity> getSubscriptionService(@PathVariable Long serviceId) {
+        com.wisdom.finance.subscription.entity.SubscriptionServiceEntity service = subscriptionService.getSubscriptionService(serviceId);
         if (service == null) {
             return Result.error("服务不存在");
         }
@@ -61,10 +61,10 @@ public class SubscriptionController {
      * 获取订阅服务列表
      */
     @GetMapping("/services")
-    public Result<List<SubscriptionService>> getSubscriptionServices(@RequestParam(required = false) String serviceType,
+    public Result<List<com.wisdom.finance.subscription.entity.SubscriptionServiceEntity>> getSubscriptionServices(@RequestParam(required = false) String serviceType,
                                                                  @RequestParam(required = false) String targetRole,
                                                                  @RequestParam(required = false) String status) {
-        List<SubscriptionService> services = subscriptionService.getSubscriptionServices(serviceType, targetRole, status);
+        List<com.wisdom.finance.subscription.entity.SubscriptionServiceEntity> services = subscriptionService.getSubscriptionServices(serviceType, targetRole, status);
         return Result.success(services);
     }
 

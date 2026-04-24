@@ -10,7 +10,8 @@ import com.wisdom.finance.loan.entity.LoanProduct;
 import com.wisdom.finance.loan.mapper.LoanApplicationRepository;
 import com.wisdom.finance.loan.mapper.LoanProductRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,10 +23,11 @@ import java.util.UUID;
 /**
  * 贷款服务 - M4 贷款申请流程
  */
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LoanService {
+
+    private static final Logger log = LoggerFactory.getLogger(LoanService.class);
 
     private final LoanApplicationRepository loanApplicationRepository;
     private final LoanProductRepository loanProductRepository;

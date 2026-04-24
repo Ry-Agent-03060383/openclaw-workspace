@@ -16,7 +16,8 @@ import com.wisdom.finance.loan.mapper.LoanApplicationRepository;
 import com.wisdom.finance.user.entity.User;
 import com.wisdom.finance.user.mapper.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,10 +30,11 @@ import java.util.Map;
 /**
  * 运营管理服务 - 平台运营方业务流程
  */
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AdminService {
+
+    private static final Logger log = LoggerFactory.getLogger(AdminService.class);
 
     private final AdminOperationLogRepository adminOperationLogRepository;
     private final SystemConfigRepository systemConfigRepository;
@@ -53,21 +55,21 @@ public class AdminService {
                                              String ipAddress, String userAgent) {
         log.info("记录运营操作日志，操作人: {}, 操作类型: {}", operatorName, operationType);
         
-        AdminOperationLog log = new AdminOperationLog();
-        log.setOperatorId(operatorId);
-        log.setOperatorName(operatorName);
-        log.setOperationType(operationType);
-        log.setOperationDesc(operationDesc);
-        log.setTargetType(targetType);
-        log.setTargetId(targetId);
-        log.setTargetName(targetName);
-        log.setBeforeData(convertToJson(beforeData));
-        log.setAfterData(convertToJson(afterData));
-        log.setIpAddress(ipAddress);
-        log.setUserAgent(userAgent);
-        log.setStatus("SUCCESS");
+        AdminOperationLog operationLog = new AdminOperationLog();
+        operationLog.setOperatorId(operatorId);
+        operationLog.setOperatorName(operatorName);
+        operationLog.setOperationType(operationType);
+        operationLog.setOperationDesc(operationDesc);
+        operationLog.setTargetType(targetType);
+        operationLog.setTargetId(targetId);
+        operationLog.setTargetName(targetName);
+        operationLog.setBeforeData(convertToJson(beforeData));
+        operationLog.setAfterData(convertToJson(afterData));
+        operationLog.setIpAddress(ipAddress);
+        operationLog.setUserAgent(userAgent);
+        operationLog.setStatus("SUCCESS");
         
-        return adminOperationLogRepository.save(log);
+        return adminOperationLogRepository.save(operationLog);
     }
 
     /**

@@ -235,4 +235,17 @@ public class UserController {
             return Result.error(e.getMessage());
         }
     }
+    
+    /**
+     * 用户注册
+     */
+    @PostMapping("/register")
+    public Result<User> register(@RequestBody User user) {
+        try {
+            User created = userService.registerUser(user);
+            return Result.success(created);
+        } catch (RuntimeException e) {
+            return Result.error(e.getMessage());
+        }
+    }
 }

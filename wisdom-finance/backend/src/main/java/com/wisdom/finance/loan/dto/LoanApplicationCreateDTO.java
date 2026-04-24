@@ -44,4 +44,100 @@ public class LoanApplicationCreateDTO {
     private String riskLevel;                // 风险等级（系统返回）
     
     private List<String> materials;          // 申请材料列表
+    
+    public Long getProductId() {
+        return productId;
+    }
+    
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+    
+    public Long getCompanyId() {
+        return companyId;
+    }
+    
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
+    }
+    
+    public String getCompanyName() {
+        return companyName;
+    }
+    
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+    
+    public String getCreditCode() {
+        return creditCode;
+    }
+    
+    public void setCreditCode(String creditCode) {
+        this.creditCode = creditCode;
+    }
+    
+    public BigDecimal getLoanAmount() {
+        return loanAmount;
+    }
+    
+    public void setLoanAmount(BigDecimal loanAmount) {
+        this.loanAmount = loanAmount;
+    }
+    
+    public Integer getLoanTermMonths() {
+        return loanTermMonths;
+    }
+    
+    public void setLoanTermMonths(Integer loanTermMonths) {
+        this.loanTermMonths = loanTermMonths;
+    }
+    
+    public String getLoanPurpose() {
+        return loanPurpose;
+    }
+    
+    public void setLoanPurpose(String loanPurpose) {
+        this.loanPurpose = loanPurpose;
+    }
+    
+    public String getRepaymentMethod() {
+        return repaymentMethod;
+    }
+    
+    public void setRepaymentMethod(String repaymentMethod) {
+        this.repaymentMethod = repaymentMethod;
+    }
+    
+    public Integer getCreditScore() {
+        return creditScore;
+    }
+    
+    public void setCreditScore(Integer creditScore) {
+        this.creditScore = creditScore;
+    }
+    
+    public Integer getRiskScore() {
+        return riskScore;
+    }
+    
+    public void setRiskScore(Integer riskScore) {
+        this.riskScore = riskScore;
+    }
+    
+    public String getRiskLevel() {
+        return riskLevel;
+    }
+    
+    public void setRiskLevel(String riskLevel) {
+        this.riskLevel = riskLevel;
+    }
+    
+    public List<String> getMaterials() {
+        return materials;
+    }
+    
+    public void setMaterials(List<String> materials) {
+        this.materials = materials;
+    }
 }

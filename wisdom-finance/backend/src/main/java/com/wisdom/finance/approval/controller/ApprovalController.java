@@ -1,10 +1,12 @@
-package com.wisdom.approval.controller;
+package com.wisdom.finance.approval.controller;
 
-import com.wisdom.approval.entity.ApprovalRecord;
-import com.wisdom.approval.engine.RuleEngine;
-import com.wisdom.approval.service.ApprovalService;
+import com.wisdom.finance.approval.entity.ApprovalRecord;
+import com.wisdom.finance.approval.engine.RuleEngine;
+import com.wisdom.finance.approval.service.ApprovalService;
+import com.wisdom.finance.loan.entity.LoanApplication;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +18,12 @@ import java.util.Map;
 /**
  * 审批控制器 - M5 自动化审批
  */
-@Slf4j
 @RestController
 @RequestMapping("/api/approval")
 @RequiredArgsConstructor
 public class ApprovalController {
+    
+    private static final Logger log = LoggerFactory.getLogger(ApprovalController.class);
     
     private final ApprovalService approvalService;
     private final RuleEngine ruleEngine;
@@ -144,12 +147,12 @@ public class ApprovalController {
         public String getResult() { return result; }
         public void setResult(String result) { this.result = result; }
         
-        public com.wisdom.loan.entity.LoanApplication.ApplicationStatus getResultAsStatus() {
-            try {
-                return com.wisdom.loan.entity.LoanApplication.ApplicationStatus.valueOf(result);
-            } catch (Exception e) {
-                return null;
-            }
+        public LoanApplication.ApplicationStatus getResultAsStatus() {
+        try {
+            return LoanApplication.ApplicationStatus.valueOf(result);
+        } catch (Exception e) {
+            return null;
+        }
         }
         
         public String getComment() { return comment; }

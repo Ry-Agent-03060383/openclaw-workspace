@@ -52,4 +52,100 @@ public class BankApiLog extends BaseEntity {
     
     @Column(name = "related_type", length = 50)
     private String relatedType; // 关联业务类型
+    
+    public Long getBankId() {
+        return bankId;
+    }
+    
+    public void setBankId(Long bankId) {
+        this.bankId = bankId;
+    }
+    
+    public Bank getBank() {
+        return bank;
+    }
+    
+    public void setBank(Bank bank) {
+        this.bank = bank;
+    }
+    
+    public String getApiType() {
+        return apiType;
+    }
+    
+    public void setApiType(String apiType) {
+        this.apiType = apiType;
+    }
+    
+    public String getRequestUrl() {
+        return requestUrl;
+    }
+    
+    public void setRequestUrl(String requestUrl) {
+        this.requestUrl = requestUrl;
+    }
+    
+    public String getRequestParams() {
+        return requestParams;
+    }
+    
+    public void setRequestParams(String requestParams) {
+        this.requestParams = requestParams;
+    }
+    
+    public String getResponseData() {
+        return responseData;
+    }
+    
+    public void setResponseData(String responseData) {
+        this.responseData = responseData;
+    }
+    
+    public String getStatus() {
+        return status;
+    }
+    
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+    
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+    
+    public LocalDateTime getResponseTime() {
+        return responseTime;
+    }
+    
+    public void setResponseTime(LocalDateTime responseTime) {
+        this.responseTime = responseTime;
+    }
+    
+    public Long getProcessingTime() {
+        return processingTime;
+    }
+    
+    public void setProcessingTime(Long processingTime) {
+        this.processingTime = processingTime;
+    }
+    
+    public Long getRelatedId() {
+        return relatedId;
+    }
+    
+    public void setRelatedId(Long relatedId) {
+        this.relatedId = relatedId;
+    }
+    
+    public String getRelatedType() {
+        return relatedType;
+    }
+    
+    public void setRelatedType(String relatedType) {
+        this.relatedType = relatedType;
+    }
 }

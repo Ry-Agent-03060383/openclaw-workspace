@@ -2,8 +2,6 @@ package com.wisdom.finance.admin.entity;
 
 import com.wisdom.finance.common.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,8 +9,6 @@ import java.time.LocalDateTime;
 /**
  * 征信业务审计报告 - 平台运营方征信业务审计
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "t_credit_audit_report")
 public class CreditAuditReport extends BaseEntity {
@@ -88,4 +84,54 @@ public class CreditAuditReport extends BaseEntity {
     
     @Column(name = "remark", length = 500)
     private String remark; // 备注
+
+    // Getters and Setters
+    public String getReportNo() { return reportNo; }
+    public void setReportNo(String reportNo) { this.reportNo = reportNo; }
+    public LocalDate getAuditDate() { return auditDate; }
+    public void setAuditDate(LocalDate auditDate) { this.auditDate = auditDate; }
+    public LocalDate getAuditPeriodStart() { return auditPeriodStart; }
+    public void setAuditPeriodStart(LocalDate auditPeriodStart) { this.auditPeriodStart = auditPeriodStart; }
+    public LocalDate getAuditPeriodEnd() { return auditPeriodEnd; }
+    public void setAuditPeriodEnd(LocalDate auditPeriodEnd) { this.auditPeriodEnd = auditPeriodEnd; }
+    public String getReportType() { return reportType; }
+    public void setReportType(String reportType) { this.reportType = reportType; }
+    public Integer getCreditQueryCount() { return creditQueryCount; }
+    public void setCreditQueryCount(Integer creditQueryCount) { this.creditQueryCount = creditQueryCount; }
+    public Integer getCreditReportCount() { return creditReportCount; }
+    public void setCreditReportCount(Integer creditReportCount) { this.creditReportCount = creditReportCount; }
+    public Integer getScoreCalculationCount() { return scoreCalculationCount; }
+    public void setScoreCalculationCount(Integer scoreCalculationCount) { this.scoreCalculationCount = scoreCalculationCount; }
+    public Integer getAverageCreditScore() { return averageCreditScore; }
+    public void setAverageCreditScore(Integer averageCreditScore) { this.averageCreditScore = averageCreditScore; }
+    public Integer getHighRiskCount() { return highRiskCount; }
+    public void setHighRiskCount(Integer highRiskCount) { this.highRiskCount = highRiskCount; }
+    public Integer getMediumRiskCount() { return mediumRiskCount; }
+    public void setMediumRiskCount(Integer mediumRiskCount) { this.mediumRiskCount = mediumRiskCount; }
+    public Integer getLowRiskCount() { return lowRiskCount; }
+    public void setLowRiskCount(Integer lowRiskCount) { this.lowRiskCount = lowRiskCount; }
+    public Integer getAbnormalOperations() { return abnormalOperations; }
+    public void setAbnormalOperations(Integer abnormalOperations) { this.abnormalOperations = abnormalOperations; }
+    public Integer getComplianceIssues() { return complianceIssues; }
+    public void setComplianceIssues(Integer complianceIssues) { this.complianceIssues = complianceIssues; }
+    public Integer getDataQualityScore() { return dataQualityScore; }
+    public void setDataQualityScore(Integer dataQualityScore) { this.dataQualityScore = dataQualityScore; }
+    public BigDecimal getSystemPerformance() { return systemPerformance; }
+    public void setSystemPerformance(BigDecimal systemPerformance) { this.systemPerformance = systemPerformance; }
+    public String getDataSources() { return dataSources; }
+    public void setDataSources(String dataSources) { this.dataSources = dataSources; }
+    public String getAuditFindings() { return auditFindings; }
+    public void setAuditFindings(String auditFindings) { this.auditFindings = auditFindings; }
+    public String getRecommendations() { return recommendations; }
+    public void setRecommendations(String recommendations) { this.recommendations = recommendations; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+    public String getAuditor() { return auditor; }
+    public void setAuditor(String auditor) { this.auditor = auditor; }
+    public String getApprovalBy() { return approvalBy; }
+    public void setApprovalBy(String approvalBy) { this.approvalBy = approvalBy; }
+    public LocalDateTime getApprovalDate() { return approvalDate; }
+    public void setApprovalDate(LocalDateTime approvalDate) { this.approvalDate = approvalDate; }
+    public String getRemark() { return remark; }
+    public void setRemark(String remark) { this.remark = remark; }
 }

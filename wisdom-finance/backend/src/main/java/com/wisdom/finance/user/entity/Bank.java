@@ -46,4 +46,92 @@ public class Bank extends BaseEntity {
     
     @Column(name = "remark", length = 500)
     private String remark; // 备注
+    
+    public String getBankCode() {
+        return bankCode;
+    }
+    
+    public void setBankCode(String bankCode) {
+        this.bankCode = bankCode;
+    }
+    
+    public String getBankName() {
+        return bankName;
+    }
+    
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+    
+    public String getShortName() {
+        return shortName;
+    }
+    
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
+    
+    public String getContactPerson() {
+        return contactPerson;
+    }
+    
+    public void setContactPerson(String contactPerson) {
+        this.contactPerson = contactPerson;
+    }
+    
+    public String getContactPhone() {
+        return contactPhone;
+    }
+    
+    public void setContactPhone(String contactPhone) {
+        this.contactPhone = contactPhone;
+    }
+    
+    public String getContactEmail() {
+        return contactEmail;
+    }
+    
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
+    }
+    
+    public String getAddress() {
+        return address;
+    }
+    
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    
+    public String getStatus() {
+        return status;
+    }
+    
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
+    public String getApiUrl() {
+        return apiUrl;
+    }
+    
+    public void setApiUrl(String apiUrl) {
+        this.apiUrl = apiUrl;
+    }
+    
+    public String getApiKey() {
+        return apiKey;
+    }
+    
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
+    }
+    
+    public String getRemark() {
+        return remark;
+    }
+    
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 }

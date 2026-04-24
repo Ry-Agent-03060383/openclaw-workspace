@@ -2,13 +2,11 @@ package com.wisdom.finance.approval.entity;
 
 import com.wisdom.finance.loan.entity.LoanApplication;
 import jakarta.persistence.*;
-import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
  * 审批流程记录 - M5 自动化审批
  */
-@Data
 @Entity
 @Table(name = "t_approval_record")
 public class ApprovalRecord {
@@ -55,4 +53,28 @@ public class ApprovalRecord {
         MANUAL_REVIEW,  // 人工复审
         FINAL_REVIEW    // 终审
     }
+    
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public Long getApplicationId() { return applicationId; }
+    public void setApplicationId(Long applicationId) { this.applicationId = applicationId; }
+    public String getApplicationNo() { return applicationNo; }
+    public void setApplicationNo(String applicationNo) { this.applicationNo = applicationNo; }
+    public ApprovalStage getStage() { return stage; }
+    public void setStage(ApprovalStage stage) { this.stage = stage; }
+    public LoanApplication.ApplicationStatus getResult() { return result; }
+    public void setResult(LoanApplication.ApplicationStatus result) { this.result = result; }
+    public Long getReviewerId() { return reviewerId; }
+    public void setReviewerId(Long reviewerId) { this.reviewerId = reviewerId; }
+    public String getReviewerName() { return reviewerName; }
+    public void setReviewerName(String reviewerName) { this.reviewerName = reviewerName; }
+    public String getReviewComment() { return reviewComment; }
+    public void setReviewComment(String reviewComment) { this.reviewComment = reviewComment; }
+    public Boolean getAutoApproval() { return autoApproval; }
+    public void setAutoApproval(Boolean autoApproval) { this.autoApproval = autoApproval; }
+    public String getRuleCodes() { return ruleCodes; }
+    public void setRuleCodes(String ruleCodes) { this.ruleCodes = ruleCodes; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }

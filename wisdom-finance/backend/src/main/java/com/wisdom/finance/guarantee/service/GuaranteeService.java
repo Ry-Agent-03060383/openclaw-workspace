@@ -8,7 +8,8 @@ import com.wisdom.finance.guarantee.mapper.GuaranteeRepository;
 import com.wisdom.finance.loan.entity.LoanApplication;
 import com.wisdom.finance.loan.mapper.LoanApplicationRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,10 +23,11 @@ import java.util.UUID;
 /**
  * 担保服务 - 担保业务流程
  */
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GuaranteeService {
+
+    private static final Logger log = LoggerFactory.getLogger(GuaranteeService.class);
 
     private final GuaranteeApplicationRepository guaranteeApplicationRepository;
     private final GuaranteeRepository guaranteeRepository;

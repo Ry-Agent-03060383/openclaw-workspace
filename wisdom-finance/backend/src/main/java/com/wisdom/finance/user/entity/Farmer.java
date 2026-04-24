@@ -1,16 +1,13 @@
 package com.wisdom.finance.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wisdom.finance.common.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import java.math.BigDecimal;
 
 /**
  * 农户实体 - 农户信息管理
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "t_farmer")
 public class Farmer extends BaseEntity {
@@ -20,6 +17,7 @@ public class Farmer extends BaseEntity {
     
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @JsonIgnore
     private User user;
     
     @Column(name = "farmer_name", length = 50)
@@ -75,4 +73,46 @@ public class Farmer extends BaseEntity {
     
     @Column(name = "remark", length = 500)
     private String remark; // 备注
+
+    // Getters and Setters
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+    public String getFarmerName() { return farmerName; }
+    public void setFarmerName(String farmerName) { this.farmerName = farmerName; }
+    public String getIdCard() { return idCard; }
+    public void setIdCard(String idCard) { this.idCard = idCard; }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+    public String getVillage() { return village; }
+    public void setVillage(String village) { this.village = village; }
+    public String getTown() { return town; }
+    public void setTown(String town) { this.town = town; }
+    public String getCounty() { return county; }
+    public void setCounty(String county) { this.county = county; }
+    public BigDecimal getLandArea() { return landArea; }
+    public void setLandArea(BigDecimal landArea) { this.landArea = landArea; }
+    public String getFarmingType() { return farmingType; }
+    public void setFarmingType(String farmingType) { this.farmingType = farmingType; }
+    public Integer getFamilyMembers() { return familyMembers; }
+    public void setFamilyMembers(Integer familyMembers) { this.familyMembers = familyMembers; }
+    public BigDecimal getAnnualIncome() { return annualIncome; }
+    public void setAnnualIncome(BigDecimal annualIncome) { this.annualIncome = annualIncome; }
+    public Integer getCreditScore() { return creditScore; }
+    public void setCreditScore(Integer creditScore) { this.creditScore = creditScore; }
+    public String getRiskLevel() { return riskLevel; }
+    public void setRiskLevel(String riskLevel) { this.riskLevel = riskLevel; }
+    public Integer getFarmingYears() { return farmingYears; }
+    public void setFarmingYears(Integer farmingYears) { this.farmingYears = farmingYears; }
+    public Long getCooperativeId() { return cooperativeId; }
+    public void setCooperativeId(Long cooperativeId) { this.cooperativeId = cooperativeId; }
+    public String getCooperativeName() { return cooperativeName; }
+    public void setCooperativeName(String cooperativeName) { this.cooperativeName = cooperativeName; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+    public String getRemark() { return remark; }
+    public void setRemark(String remark) { this.remark = remark; }
 }

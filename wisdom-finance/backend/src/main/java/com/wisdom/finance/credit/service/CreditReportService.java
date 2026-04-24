@@ -6,7 +6,8 @@ import com.wisdom.finance.credit.entity.CreditReport;
 import com.wisdom.finance.credit.mapper.CompanyRepository;
 import com.wisdom.finance.credit.mapper.CreditReportRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,11 +23,11 @@ import java.util.UUID;
 /**
  * 信用报告服务 - 企业信用报告生成和管理
  */
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CreditReportService {
 
+    private static final Logger log = LoggerFactory.getLogger(CreditReportService.class);
     private final CreditReportRepository creditReportRepository;
     private final CompanyRepository companyRepository;
     private final CreditQueryService creditQueryService;

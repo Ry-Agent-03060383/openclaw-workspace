@@ -1,17 +1,14 @@
 package com.wisdom.finance.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wisdom.finance.common.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
  * 企业实体 - 企业信息管理
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "t_enterprise")
 public class Enterprise extends BaseEntity {
@@ -21,6 +18,7 @@ public class Enterprise extends BaseEntity {
     
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @JsonIgnore
     private User user;
     
     @Column(name = "enterprise_name", length = 200, nullable = false)
@@ -82,4 +80,50 @@ public class Enterprise extends BaseEntity {
     
     @Column(name = "remark", length = 500)
     private String remark; // 备注
+
+    // Getters and Setters
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+    public String getEnterpriseName() { return enterpriseName; }
+    public void setEnterpriseName(String enterpriseName) { this.enterpriseName = enterpriseName; }
+    public String getCreditCode() { return creditCode; }
+    public void setCreditCode(String creditCode) { this.creditCode = creditCode; }
+    public String getLegalPerson() { return legalPerson; }
+    public void setLegalPerson(String legalPerson) { this.legalPerson = legalPerson; }
+    public String getLegalPersonId() { return legalPersonId; }
+    public void setLegalPersonId(String legalPersonId) { this.legalPersonId = legalPersonId; }
+    public BigDecimal getRegisteredCapital() { return registeredCapital; }
+    public void setRegisteredCapital(BigDecimal registeredCapital) { this.registeredCapital = registeredCapital; }
+    public LocalDate getEstablishmentDate() { return establishmentDate; }
+    public void setEstablishmentDate(LocalDate establishmentDate) { this.establishmentDate = establishmentDate; }
+    public String getBusinessStatus() { return businessStatus; }
+    public void setBusinessStatus(String businessStatus) { this.businessStatus = businessStatus; }
+    public String getIndustry() { return industry; }
+    public void setIndustry(String industry) { this.industry = industry; }
+    public String getIndustryCode() { return industryCode; }
+    public void setIndustryCode(String industryCode) { this.industryCode = industryCode; }
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+    public String getContactPerson() { return contactPerson; }
+    public void setContactPerson(String contactPerson) { this.contactPerson = contactPerson; }
+    public String getContactPhone() { return contactPhone; }
+    public void setContactPhone(String contactPhone) { this.contactPhone = contactPhone; }
+    public String getContactEmail() { return contactEmail; }
+    public void setContactEmail(String contactEmail) { this.contactEmail = contactEmail; }
+    public String getBusinessScope() { return businessScope; }
+    public void setBusinessScope(String businessScope) { this.businessScope = businessScope; }
+    public Integer getEmployeeCount() { return employeeCount; }
+    public void setEmployeeCount(Integer employeeCount) { this.employeeCount = employeeCount; }
+    public BigDecimal getAnnualRevenue() { return annualRevenue; }
+    public void setAnnualRevenue(BigDecimal annualRevenue) { this.annualRevenue = annualRevenue; }
+    public Integer getCreditScore() { return creditScore; }
+    public void setCreditScore(Integer creditScore) { this.creditScore = creditScore; }
+    public String getRiskLevel() { return riskLevel; }
+    public void setRiskLevel(String riskLevel) { this.riskLevel = riskLevel; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+    public String getRemark() { return remark; }
+    public void setRemark(String remark) { this.remark = remark; }
 }

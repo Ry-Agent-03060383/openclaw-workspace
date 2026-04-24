@@ -1,6 +1,6 @@
 package com.wisdom.finance.notification.service;
 
-import com.wisdom.finance.notification.constant.NotificationType;
+
 import com.wisdom.finance.notification.entity.Notification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -203,13 +203,13 @@ public class NotificationService {
      * @param referenceId 关联ID
      * @return 创建的通知
      */
-    public Notification createNotification(Long userId, NotificationType type, String title, 
+    public Notification createNotification(Long userId, Notification.NotificationType type, String title, 
                                            String content, String referenceType, Long referenceId) {
         Notification notification = new Notification();
         notification.setUserId(userId);
         notification.setType(type);
-        notification.setTitle(title != null ? title : type.getTitle());
-        notification.setContent(content != null ? content : type.getDefaultContent());
+        notification.setTitle(title != null ? title : type.name());
+        notification.setContent(content != null ? content : "系统通知");
         notification.setReferenceType(referenceType);
         notification.setReferenceId(referenceId);
         

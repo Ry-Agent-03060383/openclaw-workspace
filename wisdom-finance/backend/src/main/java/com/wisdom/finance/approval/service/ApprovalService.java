@@ -1,12 +1,13 @@
-package com.wisdom.approval.service;
+package com.wisdom.finance.approval.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wisdom.approval.engine.RuleEngine;
-import com.wisdom.approval.entity.ApprovalRecord;
-import com.wisdom.approval.entity.ApprovalRule;
-import com.wisdom.loan.entity.LoanApplication;
+import com.wisdom.finance.approval.engine.RuleEngine;
+import com.wisdom.finance.approval.entity.ApprovalRecord;
+import com.wisdom.finance.approval.entity.ApprovalRule;
+import com.wisdom.finance.loan.entity.LoanApplication;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,10 +20,11 @@ import java.util.Map;
 /**
  * 审批服务 - M5 自动化审批
  */
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ApprovalService {
+    
+    private static final Logger log = LoggerFactory.getLogger(ApprovalService.class);
     
     private final RuleEngine ruleEngine;
     private final ObjectMapper objectMapper;

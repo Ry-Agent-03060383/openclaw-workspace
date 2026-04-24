@@ -8,7 +8,8 @@ import com.wisdom.finance.bank.mapper.BankProductRepository;
 import com.wisdom.finance.user.entity.Bank;
 import com.wisdom.finance.user.mapper.BankRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -20,10 +21,11 @@ import java.util.Map;
 /**
  * 银行服务 - 银行业务流程
  */
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BankService {
+
+    private static final Logger logger = LoggerFactory.getLogger(BankService.class);
 
     private final BankRepository bankRepository;
     private final BankProductRepository bankProductRepository;
@@ -36,7 +38,7 @@ public class BankService {
      */
     @Transactional
     public Bank createBank(Bank bank) {
-        log.info("创建银行: {}", bank.getBankName());
+        logger.info("创建银行: {}", bank.getBankName());
         bank.setStatus("ACTIVE");
         return bankRepository.save(bank);
     }
@@ -46,7 +48,7 @@ public class BankService {
      */
     @Transactional
     public Bank updateBank(Long bankId, Bank bank) {
-        log.info("更新银行信息，银行ID: {}", bankId);
+        logger.info("更新银行信息，银行ID: {}", bankId);
         Bank existing = bankRepository.findById(bankId)
                 .orElseThrow(() -> new RuntimeException("银行不存在"));
         
@@ -83,7 +85,7 @@ public class BankService {
      */
     @Transactional
     public BankProduct createBankProduct(BankProduct product) {
-        log.info("创建银行产品: {}", product.getProductName());
+        logger.info("创建银行产品: {}", product.getProductName());
         product.setStatus("ACTIVE");
         return bankProductRepository.save(product);
     }
@@ -108,21 +110,21 @@ public class BankService {
     @Transactional
     public <T> T callBankApi(Long bankId, String apiType, String endpoint, Map<String, Object> params, 
                            Class<T> responseClass, Long relatedId, String relatedType) {
-        log.info("调用银行API，银行ID: {}, API类型: {}", bankId, apiType);
+        logger.info("调用银行API，银行ID: {}, API类型: {}", bankId, apiType);
         
         Bank bank = bankRepository.findById(bankId)
                 .orElseThrow(() -> new RuntimeException("银行不存在"));
         
-        BankApiLog log = new BankApiLog();
-        log.setBankId(bankId);
-        log.setApiType(apiType);
-        log.setRequestUrl(bank.getApiUrl() + endpoint);
-        log.setRequestParams(convertToJson(params));
-        log.setStatus("PROCESSING");
-        log.setRelatedId(relatedId);
-        log.setRelatedType(relatedType);
+        BankApiLog apiLog = new BankApiLog();
+        apiLog.setBankId(bankId);
+        apiLog.setApiType(apiType);
+        apiLog.setRequestUrl(bank.getApiUrl() + endpoint);
+        apiLog.setRequestParams(convertToJson(params));
+        apiLog.setStatus("PROCESSING");
+        apiLog.setRelatedId(relatedId);
+        apiLog.setRelatedType(relatedType);
         
-        BankApiLog savedLog = bankApiLogRepository.save(log);
+        BankApiLog savedLog = bankApiLogRepository.save(apiLog);
         
         long startTime = System.currentTimeMillis();
         T response = null;
@@ -130,7 +132,7 @@ public class BankService {
         try {
             // 实际项目中这里会调用真实的银行API
             // 这里模拟API调用
-            log.info("模拟调用银行API: {}", savedLog.getRequestUrl());
+            logger.info("模拟调用银行API: {}", savedLog.getRequestUrl());
             
             // 模拟响应
             response = createMockResponse(responseClass);
@@ -141,7 +143,7 @@ public class BankService {
             savedLog.setProcessingTime(System.currentTimeMillis() - startTime);
             
         } catch (Exception e) {
-            log.error("银行API调用失败", e);
+            logger.error("银行API调用失败", e);
             savedLog.setStatus("FAILED");
             savedLog.setErrorMessage(e.getMessage());
             savedLog.setResponseTime(LocalDateTime.now());
@@ -176,7 +178,7 @@ public class BankService {
         try {
             return objectMapper.writeValueAsString(object);
         } catch (Exception e) {
-            log.warn("JSON转换失败", e);
+            logger.warn("JSON转换失败", e);
             return "{}";
         }
     }
@@ -191,7 +193,7 @@ public class BankService {
             }
             return responseClass.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
-            log.warn("创建模拟响应失败", e);
+            logger.warn("创建模拟响应失败", e);
             return null;
         }
     }

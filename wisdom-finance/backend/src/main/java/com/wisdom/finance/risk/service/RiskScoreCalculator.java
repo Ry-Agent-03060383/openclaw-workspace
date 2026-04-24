@@ -2,7 +2,8 @@ package com.wisdom.finance.risk.service;
 
 import com.wisdom.finance.credit.entity.Company;
 import com.wisdom.finance.loan.entity.LoanApplication;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -21,9 +22,10 @@ import java.util.Map;
  * - 财务状况 25%（营收规模、资产负债、现金流）
  * - 行业风险 10%（行业周期、政策影响）
  */
-@Slf4j
 @Service
 public class RiskScoreCalculator {
+    
+    private static final Logger log = LoggerFactory.getLogger(RiskScoreCalculator.class);
 
     // 评估模型版本
     private static final String MODEL_VERSION = "v1.0.0";
