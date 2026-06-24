@@ -1,15 +1,14 @@
 package com.wisdom.finance.guarantee.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wisdom.finance.guarantee.entity.Guarantee;
 import com.wisdom.finance.guarantee.entity.GuaranteeApplication;
 import com.wisdom.finance.guarantee.mapper.GuaranteeApplicationRepository;
 import com.wisdom.finance.guarantee.mapper.GuaranteeRepository;
-import com.wisdom.finance.loan.entity.LoanApplication;
-import com.wisdom.finance.loan.mapper.LoanApplicationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -31,26 +30,17 @@ class GuaranteeServiceTest {
     @Mock
     private GuaranteeRepository guaranteeRepository;
 
-    @Mock
-    private LoanApplicationRepository loanApplicationRepository;
-
-    @Mock
-    private ObjectMapper objectMapper;
-
     @InjectMocks
     private GuaranteeService guaranteeService;
 
+    @Captor
+    private ArgumentCaptor<Guarantee> guaranteeCaptor;
+
     private GuaranteeApplication testApplication;
     private Guarantee testGuarantee;
-    private LoanApplication testLoanApp;
 
     @BeforeEach
     void setUp() {
-        testLoanApp = new LoanApplication();
-        testLoanApp.setId(100L);
-        testLoanApp.setLoanTermMonths(12);
-        testLoanApp.setRiskLevel("低");
-
         testApplication = new GuaranteeApplication();
         testApplication.setId(1L);
         testApplication.setApplicantName("测试企业");
@@ -62,14 +52,14 @@ class GuaranteeServiceTest {
         testGuarantee = new Guarantee();
         testGuarantee.setId(1L);
         testGuarantee.setGuaranteeNo("GU20250601000001");
-        testGuarantee.setApplicationId(100L);
+        testGuarantee.setApplicationId(1L);
         testGuarantee.setStatus("ACTIVE");
     }
 
-    // ======================== createGuaranteeApplication ========================
+    // ======================== createApplication ========================
 
     @Test
-    void createGuaranteeApplication_ShouldSetAppNoAndDraftStatus() {
+    void createApplication_ShouldSetAppNoAndDraftStatus() {
         GuaranteeApplication input = new GuaranteeApplication();
         input.setApplicantName("新企业");
         input.setRequestAmount(new BigDecimal("300000"));
@@ -78,7 +68,7 @@ class GuaranteeServiceTest {
         when(guaranteeApplicationRepository.save(any(GuaranteeApplication.class)))
                 .thenAnswer(i -> i.getArgument(0));
 
-        GuaranteeApplication result = guaranteeService.createGuaranteeApplication(input);
+        GuaranteeApplication result = guaranteeService.createApplication(input);
 
         assertNotNull(result);
         assertEquals("DRAFT", result.getStatus());
@@ -87,17 +77,17 @@ class GuaranteeServiceTest {
         verify(guaranteeApplicationRepository).save(input);
     }
 
-    // ======================== submitGuaranteeApplication ========================
+    // ======================== submitApplication ========================
 
     @Test
-    void submitGuaranteeApplication_ShouldChangeDraftToSubmitted() {
+    void submitApplication_ShouldChangeDraftToSubmitted() {
         testApplication.setStatus("DRAFT");
 
         when(guaranteeApplicationRepository.findById(1L)).thenReturn(Optional.of(testApplication));
         when(guaranteeApplicationRepository.save(any(GuaranteeApplication.class)))
                 .thenAnswer(i -> i.getArgument(0));
 
-        GuaranteeApplication result = guaranteeService.submitGuaranteeApplication(1L);
+        GuaranteeApplication result = guaranteeService.submitApplication(1L);
 
         assertEquals("SUBMITTED", result.getStatus());
         assertNotNull(result.getSubmitTime());
@@ -105,137 +95,107 @@ class GuaranteeServiceTest {
     }
 
     @Test
-    void submitGuaranteeApplication_ShouldThrowWhenNotFound() {
+    void submitApplication_ShouldThrowWhenNotFound() {
         when(guaranteeApplicationRepository.findById(999L)).thenReturn(Optional.empty());
 
         RuntimeException ex = assertThrows(RuntimeException.class,
-                () -> guaranteeService.submitGuaranteeApplication(999L));
+                () -> guaranteeService.submitApplication(999L));
         assertEquals("担保申请不存在", ex.getMessage());
     }
 
     @Test
-    void submitGuaranteeApplication_ShouldThrowWhenNotDraft() {
+    void submitApplication_ShouldThrowWhenNotDraft() {
         testApplication.setStatus("SUBMITTED");
         when(guaranteeApplicationRepository.findById(1L)).thenReturn(Optional.of(testApplication));
 
         RuntimeException ex = assertThrows(RuntimeException.class,
-                () -> guaranteeService.submitGuaranteeApplication(1L));
+                () -> guaranteeService.submitApplication(1L));
         assertEquals("只有草稿状态的申请可以提交", ex.getMessage());
         verify(guaranteeApplicationRepository, never()).save(any());
     }
 
-    // ======================== reviewGuaranteeApplication ========================
+    // ======================== reviewApplication ========================
 
     @Test
-    void reviewGuaranteeApplication_ShouldApproveAndCreateGuarantee() {
+    void reviewApplication_ShouldApproveAndCreateGuarantee() {
         testApplication.setStatus("SUBMITTED");
 
         when(guaranteeApplicationRepository.findById(1L)).thenReturn(Optional.of(testApplication));
         when(guaranteeApplicationRepository.save(any(GuaranteeApplication.class)))
                 .thenAnswer(i -> i.getArgument(0));
-        when(loanApplicationRepository.findById(100L)).thenReturn(Optional.of(testLoanApp));
         when(guaranteeRepository.save(any(Guarantee.class))).thenAnswer(i -> {
             Guarantee g = i.getArgument(0);
             g.setId(10L);
             return g;
         });
 
-        GuaranteeApplication result = guaranteeService.reviewGuaranteeApplication(
-                1L, "APPROVED", "审核通过", 200L);
+        GuaranteeApplication result = guaranteeService.reviewApplication(1L, true, 200L, "审核通过");
 
         assertEquals("APPROVED", result.getStatus());
         assertEquals("审核通过", result.getReviewComment());
         assertEquals(200L, result.getReviewerId());
         assertNotNull(result.getReviewTime());
-        verify(guaranteeApplicationRepository).save(testApplication);
-        verify(guaranteeRepository).save(any(Guarantee.class));
+
+        // Verify guarantee was created with correct status
+        verify(guaranteeRepository).save(guaranteeCaptor.capture());
+        Guarantee created = guaranteeCaptor.getValue();
+        assertEquals("PENDING_SIGN", created.getStatus());
+        assertEquals(1L, created.getApplicationId());
+        assertEquals(100L, created.getLoanApplicationId());
+        assertEquals(50L, created.getGuarantorId());
+        assertEquals("测试企业", created.getGuarantorName());
+        assertEquals(new BigDecimal("500000"), created.getGuaranteeAmount());
+        assertEquals("连带责任保证", created.getGuaranteeType());
+        assertEquals("PENDING", created.getCounterGuaranteeStatus());
+        assertEquals("UNPAID", created.getFeeStatus());
     }
 
     @Test
-    void reviewGuaranteeApplication_ShouldRejectWithoutCreatingGuarantee() {
-        testApplication.setStatus("APPROVING");
+    void reviewApplication_ShouldRejectWithoutCreatingGuarantee() {
+        testApplication.setStatus("SUBMITTED");
 
         when(guaranteeApplicationRepository.findById(1L)).thenReturn(Optional.of(testApplication));
         when(guaranteeApplicationRepository.save(any(GuaranteeApplication.class)))
                 .thenAnswer(i -> i.getArgument(0));
 
-        GuaranteeApplication result = guaranteeService.reviewGuaranteeApplication(
-                1L, "REJECTED", "材料不齐全", 200L);
+        GuaranteeApplication result = guaranteeService.reviewApplication(1L, false, 200L, "材料不齐全");
 
         assertEquals("REJECTED", result.getStatus());
         assertEquals("材料不齐全", result.getRejectionReason());
         assertEquals("材料不齐全", result.getReviewComment());
+        assertEquals(200L, result.getReviewerId());
+        assertNotNull(result.getReviewTime());
         verify(guaranteeApplicationRepository).save(testApplication);
         verifyNoInteractions(guaranteeRepository);
     }
 
     @Test
-    void reviewGuaranteeApplication_ShouldThrowWhenWrongStatus() {
+    void reviewApplication_ShouldThrowWhenWrongStatus() {
         testApplication.setStatus("DRAFT");
         when(guaranteeApplicationRepository.findById(1L)).thenReturn(Optional.of(testApplication));
 
         RuntimeException ex = assertThrows(RuntimeException.class,
-                () -> guaranteeService.reviewGuaranteeApplication(1L, "APPROVED", "ok", 200L));
-        assertEquals("只有已提交或审核中的申请可以审核", ex.getMessage());
+                () -> guaranteeService.reviewApplication(1L, true, 200L, "ok"));
+        assertEquals("只有已提交的申请可以审核", ex.getMessage());
         verify(guaranteeApplicationRepository, never()).save(any());
     }
 
     @Test
-    void reviewGuaranteeApplication_ShouldThrowWhenNotFound() {
+    void reviewApplication_ShouldThrowWhenNotFound() {
         when(guaranteeApplicationRepository.findById(999L)).thenReturn(Optional.empty());
 
         RuntimeException ex = assertThrows(RuntimeException.class,
-                () -> guaranteeService.reviewGuaranteeApplication(999L, "APPROVED", "ok", 200L));
+                () -> guaranteeService.reviewApplication(999L, true, 200L, "ok"));
         assertEquals("担保申请不存在", ex.getMessage());
     }
 
-    // ======================== createGuaranteeFromApplication ========================
+    // ======================== getApplication ========================
 
     @Test
-    void createGuaranteeFromApplication_ShouldCreateActiveGuarantee() {
-        when(loanApplicationRepository.findById(100L)).thenReturn(Optional.of(testLoanApp));
-        when(guaranteeRepository.save(any(Guarantee.class))).thenAnswer(i -> {
-            Guarantee g = i.getArgument(0);
-            g.setId(10L);
-            return g;
-        });
-
-        Guarantee result = guaranteeService.createGuaranteeFromApplication(testApplication);
-
-        assertNotNull(result);
-        assertTrue(result.getGuaranteeNo().startsWith("GU"));
-        assertEquals(testApplication.getLoanApplicationId(), result.getApplicationId());
-        assertEquals("企业", result.getGuarantorType());
-        assertEquals(50L, result.getGuarantorId());
-        assertEquals("测试企业", result.getGuarantorName());
-        assertEquals(new BigDecimal("500000"), result.getGuaranteeAmount());
-        assertEquals(new BigDecimal("100"), result.getGuaranteeRatio());
-        assertEquals("连带责任保证", result.getGuaranteeType());
-        assertEquals(LocalDate.now(), result.getStartDate());
-        assertEquals(LocalDate.now().plusMonths(12), result.getEndDate());
-        assertEquals("ACTIVE", result.getStatus());
-        assertEquals("低", result.getRiskLevel());
-        verify(guaranteeRepository).save(any(Guarantee.class));
-    }
-
-    @Test
-    void createGuaranteeFromApplication_ShouldThrowWhenLoanAppNotFound() {
-        testApplication.setLoanApplicationId(999L);
-        when(loanApplicationRepository.findById(999L)).thenReturn(Optional.empty());
-
-        RuntimeException ex = assertThrows(RuntimeException.class,
-                () -> guaranteeService.createGuaranteeFromApplication(testApplication));
-        assertEquals("贷款申请不存在", ex.getMessage());
-        verifyNoInteractions(guaranteeRepository);
-    }
-
-    // ======================== getGuaranteeApplication ========================
-
-    @Test
-    void getGuaranteeApplication_ShouldReturnWhenFound() {
+    void getApplication_ShouldReturnWhenFound() {
         when(guaranteeApplicationRepository.findById(1L)).thenReturn(Optional.of(testApplication));
 
-        GuaranteeApplication result = guaranteeService.getGuaranteeApplication(1L);
+        GuaranteeApplication result = guaranteeService.getApplication(1L);
 
         assertNotNull(result);
         assertEquals("测试企业", result.getApplicantName());
@@ -243,12 +203,12 @@ class GuaranteeServiceTest {
     }
 
     @Test
-    void getGuaranteeApplication_ShouldReturnNullWhenNotFound() {
+    void getApplication_ShouldThrowWhenNotFound() {
         when(guaranteeApplicationRepository.findById(999L)).thenReturn(Optional.empty());
 
-        GuaranteeApplication result = guaranteeService.getGuaranteeApplication(999L);
-
-        assertNull(result);
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> guaranteeService.getApplication(999L));
+        assertEquals("担保申请不存在", ex.getMessage());
     }
 
     // ======================== getGuarantee ========================
@@ -265,39 +225,39 @@ class GuaranteeServiceTest {
     }
 
     @Test
-    void getGuarantee_ShouldReturnNullWhenNotFound() {
+    void getGuarantee_ShouldThrowWhenNotFound() {
         when(guaranteeRepository.findById(999L)).thenReturn(Optional.empty());
 
-        Guarantee result = guaranteeService.getGuarantee(999L);
-
-        assertNull(result);
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> guaranteeService.getGuarantee(999L));
+        assertEquals("担保记录不存在", ex.getMessage());
     }
 
-    // ======================== getGuaranteesByLoanApplication ========================
+    // ======================== findByLoanApplicationId ========================
 
     @Test
-    void getGuaranteesByLoanApplication_ShouldReturnGuarantees() {
+    void findByLoanApplicationId_ShouldReturnGuarantees() {
         Guarantee g1 = new Guarantee();
-        g1.setApplicationId(100L);
+        g1.setLoanApplicationId(100L);
         Guarantee g2 = new Guarantee();
-        g2.setApplicationId(100L);
+        g2.setLoanApplicationId(100L);
 
-        when(guaranteeRepository.findByApplicationId(100L)).thenReturn(List.of(g1, g2));
+        when(guaranteeRepository.findByLoanApplicationId(100L)).thenReturn(List.of(g1, g2));
 
-        List<Guarantee> result = guaranteeService.getGuaranteesByLoanApplication(100L);
+        List<Guarantee> result = guaranteeService.findByLoanApplicationId(100L);
 
         assertEquals(2, result.size());
-        verify(guaranteeRepository).findByApplicationId(100L);
+        verify(guaranteeRepository).findByLoanApplicationId(100L);
     }
 
     @Test
-    void getGuaranteesByLoanApplication_ShouldReturnEmptyWhenNone() {
-        when(guaranteeRepository.findByApplicationId(999L)).thenReturn(List.of());
+    void findByLoanApplicationId_ShouldReturnEmptyWhenNone() {
+        when(guaranteeRepository.findByLoanApplicationId(999L)).thenReturn(List.of());
 
-        List<Guarantee> result = guaranteeService.getGuaranteesByLoanApplication(999L);
+        List<Guarantee> result = guaranteeService.findByLoanApplicationId(999L);
 
         assertTrue(result.isEmpty());
-        verify(guaranteeRepository).findByApplicationId(999L);
+        verify(guaranteeRepository).findByLoanApplicationId(999L);
     }
 
     // ======================== releaseGuarantee ========================
@@ -307,9 +267,11 @@ class GuaranteeServiceTest {
         when(guaranteeRepository.findById(1L)).thenReturn(Optional.of(testGuarantee));
         when(guaranteeRepository.save(any(Guarantee.class))).thenAnswer(i -> i.getArgument(0));
 
-        Guarantee result = guaranteeService.releaseGuarantee(1L);
+        Guarantee result = guaranteeService.releaseGuarantee(1L, "担保到期");
 
         assertEquals("RELEASED", result.getStatus());
+        assertNotNull(result.getReleaseTime());
+        assertEquals("担保到期", result.getReleaseReason());
         verify(guaranteeRepository).save(testGuarantee);
     }
 
@@ -318,8 +280,8 @@ class GuaranteeServiceTest {
         when(guaranteeRepository.findById(999L)).thenReturn(Optional.empty());
 
         RuntimeException ex = assertThrows(RuntimeException.class,
-                () -> guaranteeService.releaseGuarantee(999L));
-        assertEquals("担保不存在", ex.getMessage());
+                () -> guaranteeService.releaseGuarantee(999L, "到期"));
+        assertEquals("担保记录不存在", ex.getMessage());
     }
 
     @Test
@@ -328,8 +290,166 @@ class GuaranteeServiceTest {
         when(guaranteeRepository.findById(1L)).thenReturn(Optional.of(testGuarantee));
 
         RuntimeException ex = assertThrows(RuntimeException.class,
-                () -> guaranteeService.releaseGuarantee(1L));
+                () -> guaranteeService.releaseGuarantee(1L, "到期"));
         assertEquals("只有激活状态的担保可以释放", ex.getMessage());
         verify(guaranteeRepository, never()).save(any());
+    }
+
+    // ======================== signGuarantee ========================
+
+    @Test
+    void signGuarantee_ShouldChangePendingSignToActive() {
+        testGuarantee.setStatus("PENDING_SIGN");
+        when(guaranteeRepository.findById(1L)).thenReturn(Optional.of(testGuarantee));
+        when(guaranteeRepository.save(any(Guarantee.class))).thenAnswer(i -> i.getArgument(0));
+
+        Guarantee result = guaranteeService.signGuarantee(1L, "HT20260001");
+
+        assertEquals("ACTIVE", result.getStatus());
+        assertEquals("HT20260001", result.getContractNo());
+        assertEquals(LocalDate.now(), result.getSignedDate());
+        assertEquals(LocalDate.now(), result.getStartDate());
+        assertEquals(LocalDate.now().plusYears(1), result.getEndDate());
+        verify(guaranteeRepository).save(testGuarantee);
+    }
+
+    @Test
+    void signGuarantee_ShouldThrowWhenNotFound() {
+        when(guaranteeRepository.findById(999L)).thenReturn(Optional.empty());
+
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> guaranteeService.signGuarantee(999L, "HT20260001"));
+        assertEquals("担保记录不存在", ex.getMessage());
+    }
+
+    @Test
+    void signGuarantee_ShouldThrowWhenNotPendingSign() {
+        testGuarantee.setStatus("ACTIVE");
+        when(guaranteeRepository.findById(1L)).thenReturn(Optional.of(testGuarantee));
+
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> guaranteeService.signGuarantee(1L, "HT20260001"));
+        assertEquals("只有待签约状态的担保可以签约", ex.getMessage());
+        verify(guaranteeRepository, never()).save(any());
+    }
+
+    // ======================== payFee ========================
+
+    @Test
+    void payFee_ShouldChangeUnpaidToPaid() {
+        testGuarantee.setFeeStatus("UNPAID");
+        when(guaranteeRepository.findById(1L)).thenReturn(Optional.of(testGuarantee));
+        when(guaranteeRepository.save(any(Guarantee.class))).thenAnswer(i -> i.getArgument(0));
+
+        Guarantee result = guaranteeService.payFee(1L, new BigDecimal("5000"));
+
+        assertEquals("PAID", result.getFeeStatus());
+        assertEquals(new BigDecimal("5000"), result.getFeePaid());
+        assertEquals(new BigDecimal("5000"), result.getFeeAmount());
+        verify(guaranteeRepository).save(testGuarantee);
+    }
+
+    @Test
+    void payFee_ShouldThrowWhenNotFound() {
+        when(guaranteeRepository.findById(999L)).thenReturn(Optional.empty());
+
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> guaranteeService.payFee(999L, new BigDecimal("5000")));
+        assertEquals("担保记录不存在", ex.getMessage());
+    }
+
+    @Test
+    void payFee_ShouldThrowWhenAlreadyPaid() {
+        testGuarantee.setFeeStatus("PAID");
+        when(guaranteeRepository.findById(1L)).thenReturn(Optional.of(testGuarantee));
+
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> guaranteeService.payFee(1L, new BigDecimal("5000")));
+        assertEquals("担保费不处于未支付状态", ex.getMessage());
+        verify(guaranteeRepository, never()).save(any());
+    }
+
+    // ======================== registerCounterGuarantee ========================
+
+    @Test
+    void registerCounterGuarantee_ShouldChangePendingToRegistered() {
+        testGuarantee.setCounterGuaranteeStatus("PENDING");
+        when(guaranteeRepository.findById(1L)).thenReturn(Optional.of(testGuarantee));
+        when(guaranteeRepository.save(any(Guarantee.class))).thenAnswer(i -> i.getArgument(0));
+
+        Guarantee result = guaranteeService.registerCounterGuarantee(1L, "抵押", "房产抵押", new BigDecimal("800000"));
+
+        assertEquals("REGISTERED", result.getCounterGuaranteeStatus());
+        assertEquals("抵押", result.getCounterGuaranteeType());
+        assertEquals("房产抵押", result.getCounterGuaranteeDesc());
+        assertEquals(new BigDecimal("800000"), result.getCounterGuaranteeValue());
+        verify(guaranteeRepository).save(testGuarantee);
+    }
+
+    @Test
+    void registerCounterGuarantee_ShouldThrowWhenNotFound() {
+        when(guaranteeRepository.findById(999L)).thenReturn(Optional.empty());
+
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> guaranteeService.registerCounterGuarantee(999L, "抵押", "房产抵押", new BigDecimal("800000")));
+        assertEquals("担保记录不存在", ex.getMessage());
+    }
+
+    // ======================== terminateGuarantee ========================
+
+    @Test
+    void terminateGuarantee_ShouldChangeActiveToTerminated() {
+        when(guaranteeRepository.findById(1L)).thenReturn(Optional.of(testGuarantee));
+        when(guaranteeRepository.save(any(Guarantee.class))).thenAnswer(i -> i.getArgument(0));
+
+        Guarantee result = guaranteeService.terminateGuarantee(1L, "企业注销");
+
+        assertEquals("TERMINATED", result.getStatus());
+        assertEquals("企业注销", result.getRemark());
+        verify(guaranteeRepository).save(testGuarantee);
+    }
+
+    @Test
+    void terminateGuarantee_ShouldThrowWhenNotFound() {
+        when(guaranteeRepository.findById(999L)).thenReturn(Optional.empty());
+
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> guaranteeService.terminateGuarantee(999L, "企业注销"));
+        assertEquals("担保记录不存在", ex.getMessage());
+    }
+
+    @Test
+    void terminateGuarantee_ShouldThrowWhenNotActive() {
+        testGuarantee.setStatus("RELEASED");
+        when(guaranteeRepository.findById(1L)).thenReturn(Optional.of(testGuarantee));
+
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> guaranteeService.terminateGuarantee(1L, "企业注销"));
+        assertEquals("只有激活状态的担保可以终止", ex.getMessage());
+        verify(guaranteeRepository, never()).save(any());
+    }
+
+    // ======================== calculateFee ========================
+
+    @Test
+    void calculateFee_ShouldReturnCorrectAmount() {
+        BigDecimal result = guaranteeService.calculateFee(
+                new BigDecimal("100000"), new BigDecimal("2.5"), 12);
+        assertEquals(new BigDecimal("2500.00"), result);
+    }
+
+    @Test
+    void calculateFee_ShouldReturnZeroForNullInput() {
+        assertEquals(BigDecimal.ZERO, guaranteeService.calculateFee(null, new BigDecimal("2.5"), 12));
+        assertEquals(BigDecimal.ZERO, guaranteeService.calculateFee(new BigDecimal("100000"), null, 12));
+        assertEquals(BigDecimal.ZERO, guaranteeService.calculateFee(new BigDecimal("100000"), new BigDecimal("2.5"), null));
+    }
+
+    @Test
+    void calculateFee_ShouldHandlePartialYear() {
+        // 100000 * 2.5 / 100 * 6 / 12 = 1250.00
+        BigDecimal result = guaranteeService.calculateFee(
+                new BigDecimal("100000"), new BigDecimal("2.5"), 6);
+        assertEquals(new BigDecimal("1250.00"), result);
     }
 }
