@@ -11,6 +11,7 @@ import java.util.List;
  */
 @Repository
 public interface RiskEvaluationRepository extends JpaRepository<RiskEvaluation, Long> {
+    long countByRiskLevel(String riskLevel);
     
     /**
      * 根据评估编号查询
@@ -36,4 +37,9 @@ public interface RiskEvaluationRepository extends JpaRepository<RiskEvaluation, 
      * 查询申请的最新评估记录
      */
     RiskEvaluation findTopByApplicationIdOrderByEvaluateTimeDesc(Long applicationId);
+
+    /**
+     * 查询所有评估记录，按时间倒序
+     */
+    List<RiskEvaluation> findAllByOrderByEvaluateTimeDesc();
 }

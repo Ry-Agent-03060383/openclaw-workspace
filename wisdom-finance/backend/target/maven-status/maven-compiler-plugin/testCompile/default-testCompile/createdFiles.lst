@@ -1,0 +1,14 @@
+com\wisdom\finance\guarantee\service\GuaranteeServiceTest.class
+com\wisdom\finance\dashboard\DashboardServiceTest.class
+com\wisdom\finance\approval\RuleEngineTest.class
+com\wisdom\finance\risk\RiskServiceTest.class
+com\wisdom\finance\bank\service\BankServiceTest.class
+com\wisdom\finance\notification\NotificationServiceTest.class
+com\wisdom\finance\user\UserServiceTest.class
+com\wisdom\finance\subscription\service\SubscriptionServiceTest.class
+com\wisdom\finance\thirdparty\service\ThirdPartyServiceServiceTest.class
+com\wisdom\finance\approval\ApprovalServiceTest.class
+com\wisdom\finance\loan\LoanServiceTest.class
+com\wisdom\finance\admin\service\AdminServiceTest.class
+com\wisdom\finance\credit\CreditReportServiceTest.class
+com\wisdom\finance\credit\CreditQueryServiceTest.class

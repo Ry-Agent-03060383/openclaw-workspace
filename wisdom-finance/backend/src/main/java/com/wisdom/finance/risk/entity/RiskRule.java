@@ -1,4 +1,4 @@
-package com.wisdom.risk.entity;
+package com.wisdom.finance.risk.entity;
 
 import com.wisdom.finance.common.entity.BaseEntity;
 import jakarta.persistence.*;

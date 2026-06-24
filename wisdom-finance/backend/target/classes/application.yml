@@ -21,15 +21,24 @@ spring:
         format_sql: true
 
 jwt:
-  secret: wisdom-finance-secret-key-2024
-  expiration: 86400000
+  secret: ${JWT_SECRET:wisdom-finance-secret-key-2024}
+  expiration: ${JWT_EXPIRATION:86400000}
 
 ai:
   openai:
-    api-key: 
+    api-key: ${OPENAI_API_KEY:}
     base-url: https://api.openai.com
     model: gpt-4
 
 logging:
   level:
     com.wisdom: debug
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always

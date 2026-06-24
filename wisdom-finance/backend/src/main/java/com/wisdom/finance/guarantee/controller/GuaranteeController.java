@@ -4,10 +4,16 @@ import com.wisdom.finance.common.controller.Result;
 import com.wisdom.finance.guarantee.entity.Guarantee;
 import com.wisdom.finance.guarantee.entity.GuaranteeApplication;
 import com.wisdom.finance.guarantee.service.GuaranteeService;
+import com.wisdom.finance.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 担保控制器 - 担保业务流程
@@ -20,89 +26,217 @@ public class GuaranteeController {
     private final GuaranteeService guaranteeService;
 
     /**
-     * 创建担保申请
+     * 获取当前登录用户ID
+     */
+    private Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof User user) {
+            return user.getId();
+        }
+        return null;
+    }
+
+    // ==================== 申请相关 ====================
+
+    /**
+     * GET /api/guarantee/application/list?applicantId=&status=&page=0&size=10
+     */
+    @GetMapping("/application/list")
+    public Result<Page<GuaranteeApplication>> listApplications(
+            @RequestParam(required = false) Long applicantId,
+            @RequestParam(required = false) String status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        try {
+            Page<GuaranteeApplication> result = guaranteeService.listApplications(applicantId, status, page, size);
+            return Result.success(result);
+        } catch (RuntimeException e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    /**
+     * GET /api/guarantee/application/{id}
+     */
+    @GetMapping("/application/{id}")
+    public Result<GuaranteeApplication> getApplication(@PathVariable Long id) {
+        try {
+            GuaranteeApplication result = guaranteeService.getApplication(id);
+            return Result.success(result);
+        } catch (RuntimeException e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    /**
+     * POST /api/guarantee/application
      */
     @PostMapping("/application")
-    public Result<GuaranteeApplication> createGuaranteeApplication(@RequestBody GuaranteeApplication application) {
+    public Result<GuaranteeApplication> createApplication(@RequestBody GuaranteeApplication dto) {
         try {
-            GuaranteeApplication created = guaranteeService.createGuaranteeApplication(application);
-            return Result.success(created);
+            GuaranteeApplication result = guaranteeService.createApplication(dto);
+            return Result.success(result);
         } catch (RuntimeException e) {
             return Result.error(e.getMessage());
         }
     }
 
     /**
-     * 提交担保申请
+     * POST /api/guarantee/application/{id}/submit
      */
-    @PostMapping("/application/{applicationId}/submit")
-    public Result<GuaranteeApplication> submitGuaranteeApplication(@PathVariable Long applicationId) {
+    @PostMapping("/application/{id}/submit")
+    public Result<GuaranteeApplication> submitApplication(@PathVariable Long id) {
         try {
-            GuaranteeApplication submitted = guaranteeService.submitGuaranteeApplication(applicationId);
-            return Result.success(submitted);
+            GuaranteeApplication result = guaranteeService.submitApplication(id);
+            return Result.success(result);
         } catch (RuntimeException e) {
             return Result.error(e.getMessage());
         }
     }
 
     /**
-     * 审核担保申请
+     * POST /api/guarantee/application/{id}/review?approved=true&comment=xxx
+     * 审核人从 SecurityContext 获取
      */
-    @PostMapping("/application/{applicationId}/review")
-    public Result<GuaranteeApplication> reviewGuaranteeApplication(@PathVariable Long applicationId,
-                                                                 @RequestParam String status,
-                                                                 @RequestParam String comment,
-                                                                 @RequestParam Long reviewerId) {
+    @PostMapping("/application/{id}/review")
+    public Result<GuaranteeApplication> reviewApplication(
+            @PathVariable Long id,
+            @RequestParam boolean approved,
+            @RequestParam(defaultValue = "") String comment) {
         try {
-            GuaranteeApplication reviewed = guaranteeService.reviewGuaranteeApplication(
-                    applicationId, status, comment, reviewerId);
-            return Result.success(reviewed);
+            Long reviewerId = getCurrentUserId();
+            GuaranteeApplication result = guaranteeService.reviewApplication(id, approved, reviewerId, comment);
+            return Result.success(result);
+        } catch (RuntimeException e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    // ==================== 担保相关 ====================
+
+    /**
+     * GET /api/guarantee/list?guarantorId=&status=&page=0&size=10
+     */
+    @GetMapping("/list")
+    public Result<Page<Guarantee>> listGuarantees(
+            @RequestParam(required = false) Long guarantorId,
+            @RequestParam(required = false) String status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        try {
+            Page<Guarantee> result = guaranteeService.listGuarantees(guarantorId, status, page, size);
+            return Result.success(result);
         } catch (RuntimeException e) {
             return Result.error(e.getMessage());
         }
     }
 
     /**
-     * 获取担保申请详情
+     * GET /api/guarantee/{id}
      */
-    @GetMapping("/application/{applicationId}")
-    public Result<GuaranteeApplication> getGuaranteeApplication(@PathVariable Long applicationId) {
-        GuaranteeApplication application = guaranteeService.getGuaranteeApplication(applicationId);
-        if (application == null) {
-            return Result.error("担保申请不存在");
-        }
-        return Result.success(application);
-    }
-
-    /**
-     * 获取担保详情
-     */
-    @GetMapping("/guarantee/{guaranteeId}")
-    public Result<Guarantee> getGuarantee(@PathVariable Long guaranteeId) {
-        Guarantee guarantee = guaranteeService.getGuarantee(guaranteeId);
-        if (guarantee == null) {
-            return Result.error("担保不存在");
-        }
-        return Result.success(guarantee);
-    }
-
-    /**
-     * 获取贷款申请的担保列表
-     */
-    @GetMapping("/guarantees/loan/{loanApplicationId}")
-    public Result<List<Guarantee>> getGuaranteesByLoanApplication(@PathVariable Long loanApplicationId) {
-        List<Guarantee> guarantees = guaranteeService.getGuaranteesByLoanApplication(loanApplicationId);
-        return Result.success(guarantees);
-    }
-
-    /**
-     * 释放担保
-     */
-    @PostMapping("/guarantee/{guaranteeId}/release")
-    public Result<Guarantee> releaseGuarantee(@PathVariable Long guaranteeId) {
+    @GetMapping("/{id}")
+    public Result<Guarantee> getGuarantee(@PathVariable Long id) {
         try {
-            Guarantee released = guaranteeService.releaseGuarantee(guaranteeId);
-            return Result.success(released);
+            Guarantee result = guaranteeService.getGuarantee(id);
+            return Result.success(result);
+        } catch (RuntimeException e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    /**
+     * POST /api/guarantee/{id}/sign?contractNo=xxx
+     */
+    @PostMapping("/{id}/sign")
+    public Result<Guarantee> signGuarantee(@PathVariable Long id, @RequestParam String contractNo) {
+        try {
+            Guarantee result = guaranteeService.signGuarantee(id, contractNo);
+            return Result.success(result);
+        } catch (RuntimeException e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    /**
+     * POST /api/guarantee/{id}/counter
+     * @RequestBody 含 type/desc/value
+     */
+    @PostMapping("/{id}/counter")
+    public Result<Guarantee> registerCounterGuarantee(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        try {
+            String type = body.get("counterGuaranteeType") != null ? body.get("counterGuaranteeType").toString() : null;
+            String desc = body.get("counterGuaranteeDesc") != null ? body.get("counterGuaranteeDesc").toString() : null;
+            BigDecimal value = body.get("counterGuaranteeValue") != null ? new BigDecimal(body.get("counterGuaranteeValue").toString()) : null;
+            Guarantee result = guaranteeService.registerCounterGuarantee(id, type, desc, value);
+            return Result.success(result);
+        } catch (RuntimeException e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    /**
+     * POST /api/guarantee/{id}/pay-fee?amount=xxx
+     */
+    @PostMapping("/{id}/pay-fee")
+    public Result<Guarantee> payFee(@PathVariable Long id, @RequestParam BigDecimal amount) {
+        try {
+            Guarantee result = guaranteeService.payFee(id, amount);
+            return Result.success(result);
+        } catch (RuntimeException e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    /**
+     * POST /api/guarantee/{id}/release?reason=xxx
+     */
+    @PostMapping("/{id}/release")
+    public Result<Guarantee> releaseGuarantee(@PathVariable Long id, @RequestParam String reason) {
+        try {
+            Guarantee result = guaranteeService.releaseGuarantee(id, reason);
+            return Result.success(result);
+        } catch (RuntimeException e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    /**
+     * POST /api/guarantee/{id}/terminate?reason=xxx
+     */
+    @PostMapping("/{id}/terminate")
+    public Result<Guarantee> terminateGuarantee(@PathVariable Long id, @RequestParam String reason) {
+        try {
+            Guarantee result = guaranteeService.terminateGuarantee(id, reason);
+            return Result.success(result);
+        } catch (RuntimeException e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    /**
+     * GET /api/guarantee/calculate-fee?amount=xxx&rate=xxx&months=xxx
+     */
+    @GetMapping("/calculate-fee")
+    public Result<BigDecimal> calculateFee(
+            @RequestParam BigDecimal amount,
+            @RequestParam BigDecimal rate,
+            @RequestParam Integer months) {
+        try {
+            BigDecimal result = guaranteeService.calculateFee(amount, rate, months);
+            return Result.success(result);
+        } catch (RuntimeException e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    /**
+     * GET /api/guarantee/by-loan/{loanId}
+     */
+    @GetMapping("/by-loan/{loanId}")
+    public Result<List<Guarantee>> findByLoan(@PathVariable Long loanId) {
+        try {
+            List<Guarantee> result = guaranteeService.findByLoanApplicationId(loanId);
+            return Result.success(result);
         } catch (RuntimeException e) {
             return Result.error(e.getMessage());
         }

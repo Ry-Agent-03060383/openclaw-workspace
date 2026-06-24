@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -215,6 +216,18 @@ public class RiskService {
         return evaluation;
     }
     
+    public List<RiskEvaluation> listAll() {
+        return riskEvaluationRepository.findAllByOrderByEvaluateTimeDesc();
+    }
+
+    public List<RiskEvaluation> listByCompany(Long companyId) {
+        return riskEvaluationRepository.findByCompanyId(companyId);
+    }
+
+    public List<RiskEvaluation> listByApplication(Long applicationId) {
+        return riskEvaluationRepository.findByApplicationId(applicationId);
+    }
+
     /**
      * 生成评估编号
      * 

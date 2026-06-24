@@ -1,7 +1,10 @@
 server:
-  port: 8080
+  port: 8081
   
 spring:
+  sql:
+    init:
+      mode: never
   datasource:
     url: jdbc:h2:mem:wisdom_finance;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL
     driver-class-name: org.h2.Driver
@@ -14,7 +17,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect

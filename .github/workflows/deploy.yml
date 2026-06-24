@@ -1,0 +1,27 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: [Backend CI, Frontend CI]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  docker-build:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build backend Docker image
+        run: docker build -t wisdom-finance-backend:latest -f wisdom-finance/backend/Dockerfile wisdom-finance/backend
+
+      - name: Save image
+        run: docker save wisdom-finance-backend:latest | gzip > wisdom-finance-backend.tar.gz
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-backend
+          path: wisdom-finance-backend.tar.gz

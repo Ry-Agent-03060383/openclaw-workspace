@@ -1,5 +1,6 @@
 package com.wisdom.finance.user.controller;
 
+import com.wisdom.finance.common.controller.PageResult;
 import com.wisdom.finance.common.controller.Result;
 import com.wisdom.finance.user.entity.Enterprise;
 import com.wisdom.finance.user.entity.Farmer;
@@ -10,9 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * 用户控制器 - 用户管理和角色业务流程
- */
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
@@ -20,9 +18,6 @@ public class UserController {
 
     private final UserService userService;
 
-    /**
-     * 创建用户
-     */
     @PostMapping("/create")
     public Result<User> createUser(@RequestBody User user) {
         try {
@@ -33,9 +28,6 @@ public class UserController {
         }
     }
 
-    /**
-     * 创建农户用户
-     */
     @PostMapping("/create/farmer")
     public Result<User> createFarmerUser(@RequestParam String username,
                                        @RequestParam String password,
@@ -50,7 +42,6 @@ public class UserController {
             user.setRealName(realName);
             user.setPhone(phone);
             user.setEmail(email);
-            
             User created = userService.createFarmerUser(user, farmer);
             return Result.success(created);
         } catch (RuntimeException e) {
@@ -58,9 +49,6 @@ public class UserController {
         }
     }
 
-    /**
-     * 创建企业用户
-     */
     @PostMapping("/create/enterprise")
     public Result<User> createEnterpriseUser(@RequestParam String username,
                                            @RequestParam String password,
@@ -75,7 +63,6 @@ public class UserController {
             user.setRealName(realName);
             user.setPhone(phone);
             user.setEmail(email);
-            
             User created = userService.createEnterpriseUser(user, enterprise);
             return Result.success(created);
         } catch (RuntimeException e) {
@@ -83,9 +70,6 @@ public class UserController {
         }
     }
 
-    /**
-     * 更新用户信息
-     */
     @PutMapping("/{userId}")
     public Result<User> updateUser(@PathVariable Long userId, @RequestBody User user) {
         try {
@@ -96,9 +80,26 @@ public class UserController {
         }
     }
 
-    /**
-     * 更新农户信息
-     */
+    @PutMapping("/{userId}/status")
+    public Result<User> toggleStatus(@PathVariable Long userId) {
+        try {
+            User user = userService.toggleUserStatus(userId);
+            return Result.success(user);
+        } catch (RuntimeException e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{userId}")
+    public Result<Void> deleteUser(@PathVariable Long userId) {
+        try {
+            userService.deleteUser(userId);
+            return Result.success(null);
+        } catch (RuntimeException e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
     @PutMapping("/farmer/{farmerId}")
     public Result<Farmer> updateFarmer(@PathVariable Long farmerId, @RequestBody Farmer farmer) {
         try {
@@ -109,9 +110,6 @@ public class UserController {
         }
     }
 
-    /**
-     * 更新企业信息
-     */
     @PutMapping("/enterprise/{enterpriseId}")
     public Result<Enterprise> updateEnterprise(@PathVariable Long enterpriseId, @RequestBody Enterprise enterprise) {
         try {
@@ -122,9 +120,6 @@ public class UserController {
         }
     }
 
-    /**
-     * 获取用户详情
-     */
     @GetMapping("/{userId}")
     public Result<User> getUser(@PathVariable Long userId) {
         User user = userService.getUser(userId);
@@ -134,9 +129,6 @@ public class UserController {
         return Result.success(user);
     }
 
-    /**
-     * 获取农户详情
-     */
     @GetMapping("/farmer/{farmerId}")
     public Result<Farmer> getFarmer(@PathVariable Long farmerId) {
         Farmer farmer = userService.getFarmer(farmerId);
@@ -146,9 +138,6 @@ public class UserController {
         return Result.success(farmer);
     }
 
-    /**
-     * 根据用户ID获取农户信息
-     */
     @GetMapping("/farmer/by-user/{userId}")
     public Result<Farmer> getFarmerByUserId(@PathVariable Long userId) {
         Farmer farmer = userService.getFarmerByUserId(userId);
@@ -158,9 +147,6 @@ public class UserController {
         return Result.success(farmer);
     }
 
-    /**
-     * 获取企业详情
-     */
     @GetMapping("/enterprise/{enterpriseId}")
     public Result<Enterprise> getEnterprise(@PathVariable Long enterpriseId) {
         Enterprise enterprise = userService.getEnterprise(enterpriseId);
@@ -170,9 +156,6 @@ public class UserController {
         return Result.success(enterprise);
     }
 
-    /**
-     * 根据用户ID获取企业信息
-     */
     @GetMapping("/enterprise/by-user/{userId}")
     public Result<Enterprise> getEnterpriseByUserId(@PathVariable Long userId) {
         Enterprise enterprise = userService.getEnterpriseByUserId(userId);
@@ -182,18 +165,23 @@ public class UserController {
         return Result.success(enterprise);
     }
 
-    /**
-     * 获取用户列表
-     */
     @GetMapping("/list")
     public Result<List<User>> getUsers() {
         List<User> users = userService.getUsers();
         return Result.success(users);
     }
 
-    /**
-     * 根据用户类型获取用户列表
-     */
+    @GetMapping("/page")
+    public Result<PageResult<User>> pageUsers(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String userType,
+            @RequestParam(required = false) String status,
+            @RequestParam(defaultValue = "1") int pageNum,
+            @RequestParam(defaultValue = "10") int pageSize) {
+        PageResult<User> page = userService.searchUsers(keyword, userType, status, pageNum, pageSize);
+        return Result.success(page);
+    }
+
     @GetMapping("/list/by-type/{userType}")
     public Result<List<User>> getUsersByType(@PathVariable String userType) {
         try {
@@ -205,40 +193,18 @@ public class UserController {
         }
     }
 
-    /**
-     * 获取农户列表
-     */
     @GetMapping("/farmers")
     public Result<List<Farmer>> getFarmers() {
         List<Farmer> farmers = userService.getFarmers();
         return Result.success(farmers);
     }
 
-    /**
-     * 获取企业列表
-     */
     @GetMapping("/enterprises")
     public Result<List<Enterprise>> getEnterprises() {
         List<Enterprise> enterprises = userService.getEnterprises();
         return Result.success(enterprises);
     }
 
-    /**
-     * 用户登录
-     */
-    @PostMapping("/login")
-    public Result<User> login(@RequestParam String username, @RequestParam String password) {
-        try {
-            User user = userService.login(username, password);
-            return Result.success(user);
-        } catch (RuntimeException e) {
-            return Result.error(e.getMessage());
-        }
-    }
-    
-    /**
-     * 用户注册
-     */
     @PostMapping("/register")
     public Result<User> register(@RequestBody User user) {
         try {

@@ -1,0 +1,1 @@
+import{t as e}from"./request-s0_2wnj_.js";function t(){return e.get(`/risk/evaluations`)}function n(t){return e.post(`/risk/evaluate/company`,{companyId:t})}function r(t){return e.post(`/risk/evaluate/application`,{applicationId:t})}function i(t){return e.get(`/risk/report/${t}`)}export{i,n,t as r,r as t};

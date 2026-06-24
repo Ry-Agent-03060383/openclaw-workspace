@@ -3,17 +3,24 @@ package com.wisdom.finance.user.service;
 import com.wisdom.finance.user.entity.Enterprise;
 import com.wisdom.finance.user.entity.Farmer;
 import com.wisdom.finance.user.entity.User;
+import com.wisdom.finance.common.controller.PageResult;
 import com.wisdom.finance.user.mapper.EnterpriseRepository;
 import com.wisdom.finance.user.mapper.FarmerRepository;
 import com.wisdom.finance.user.mapper.UserRepository;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -226,6 +233,50 @@ public class UserService {
      */
     public List<Enterprise> getEnterprises() {
         return enterpriseRepository.findAll();
+    }
+
+    public PageResult<User> searchUsers(String keyword, String userType, String status,
+                                         int pageNum, int pageSize) {
+        Page<User> page = userRepository.findAll((root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (StringUtils.hasText(keyword)) {
+                String like = "%" + keyword + "%";
+                predicates.add(cb.or(
+                    cb.like(root.get("username"), like),
+                    cb.like(root.get("realName"), like),
+                    cb.like(root.get("phone"), like),
+                    cb.like(root.get("email"), like)
+                ));
+            }
+            if (StringUtils.hasText(userType)) {
+                predicates.add(cb.equal(root.get("userType"),
+                    User.UserType.valueOf(userType.toUpperCase())));
+            }
+            if (StringUtils.hasText(status)) {
+                predicates.add(cb.equal(root.get("status"),
+                    User.UserStatus.valueOf(status.toUpperCase())));
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        }, PageRequest.of(pageNum - 1, pageSize, Sort.by(Sort.Direction.DESC, "createdAt")));
+
+        return PageResult.of(page.getContent(), page.getTotalElements(),
+            pageNum, pageSize);
+    }
+
+    @Transactional
+    public User toggleUserStatus(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("用户不存在"));
+        user.setStatus(user.getStatus() == User.UserStatus.ACTIVE
+                ? User.UserStatus.DISABLED : User.UserStatus.ACTIVE);
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("用户不存在"));
+        userRepository.delete(user);
     }
 
     /**

@@ -1,24 +1,26 @@
 package com.wisdom.finance.guarantee.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wisdom.finance.guarantee.entity.Guarantee;
 import com.wisdom.finance.guarantee.entity.GuaranteeApplication;
 import com.wisdom.finance.guarantee.mapper.GuaranteeApplicationRepository;
 import com.wisdom.finance.guarantee.mapper.GuaranteeRepository;
-import com.wisdom.finance.loan.entity.LoanApplication;
-import com.wisdom.finance.loan.mapper.LoanApplicationRepository;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * 担保服务 - 担保业务流程
@@ -31,158 +33,250 @@ public class GuaranteeService {
 
     private final GuaranteeApplicationRepository guaranteeApplicationRepository;
     private final GuaranteeRepository guaranteeRepository;
-    private final LoanApplicationRepository loanApplicationRepository;
-    private final ObjectMapper objectMapper;
+
+    // ==================== 申请相关 ====================
 
     /**
-     * 创建担保申请
+     * 创建担保申请草稿 DRAFT
      */
     @Transactional
-    public GuaranteeApplication createGuaranteeApplication(GuaranteeApplication application) {
-        log.info("创建担保申请，申请人: {}", application.getApplicantName());
-        
-        application.setAppNo(generateAppNo());
-        application.setStatus("DRAFT");
-        
-        return guaranteeApplicationRepository.save(application);
+    public GuaranteeApplication createApplication(GuaranteeApplication dto) {
+        log.info("创建担保申请，申请人: {}", dto.getApplicantName());
+        dto.setId(null);
+        dto.setAppNo("GA" + System.currentTimeMillis());
+        dto.setStatus("DRAFT");
+        return guaranteeApplicationRepository.save(dto);
     }
 
     /**
-     * 提交担保申请
+     * 提交申请 DRAFT → SUBMITTED
      */
     @Transactional
-    public GuaranteeApplication submitGuaranteeApplication(Long applicationId) {
-        log.info("提交担保申请，申请ID: {}", applicationId);
-        
-        GuaranteeApplication application = guaranteeApplicationRepository.findById(applicationId)
+    public GuaranteeApplication submitApplication(Long id) {
+        log.info("提交担保申请，申请ID: {}", id);
+        GuaranteeApplication app = guaranteeApplicationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("担保申请不存在"));
-        
-        if (!"DRAFT".equals(application.getStatus())) {
+        if (!"DRAFT".equals(app.getStatus())) {
             throw new RuntimeException("只有草稿状态的申请可以提交");
         }
-        
-        application.setStatus("SUBMITTED");
-        application.setSubmitTime(LocalDateTime.now());
-        
-        return guaranteeApplicationRepository.save(application);
+        app.setStatus("SUBMITTED");
+        app.setSubmitTime(LocalDateTime.now());
+        return guaranteeApplicationRepository.save(app);
     }
 
     /**
-     * 审核担保申请
+     * 审核申请 SUBMITTED → APPROVED / REJECTED
+     * 审核通过时自动创建 Guarantee 记录（PENDING_SIGN 状态）
      */
     @Transactional
-    public GuaranteeApplication reviewGuaranteeApplication(Long applicationId, String status, 
-                                                        String comment, Long reviewerId) {
-        log.info("审核担保申请，申请ID: {}, 状态: {}", applicationId, status);
-        
-        GuaranteeApplication application = guaranteeApplicationRepository.findById(applicationId)
+    public GuaranteeApplication reviewApplication(Long id, boolean approved, Long reviewerId, String comment) {
+        log.info("审核担保申请，申请ID: {}, 通过: {}, 审核人: {}", id, approved, reviewerId);
+        GuaranteeApplication app = guaranteeApplicationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("担保申请不存在"));
-        
-        if (!"SUBMITTED".equals(application.getStatus()) && !"APPROVING".equals(application.getStatus())) {
-            throw new RuntimeException("只有已提交或审核中的申请可以审核");
+        if (!"SUBMITTED".equals(app.getStatus())) {
+            throw new RuntimeException("只有已提交的申请可以审核");
         }
-        
-        application.setStatus(status);
-        application.setReviewComment(comment);
-        application.setReviewerId(reviewerId);
-        application.setReviewTime(LocalDateTime.now());
-        
-        if ("REJECTED".equals(status)) {
-            application.setRejectionReason(comment);
+        app.setReviewerId(reviewerId);
+        app.setReviewComment(comment);
+        app.setReviewTime(LocalDateTime.now());
+
+        if (approved) {
+            app.setStatus("APPROVED");
+            guaranteeApplicationRepository.save(app);
+            // 审核通过时自动创建担保记录
+            createGuaranteeFromApplication(app);
+        } else {
+            app.setStatus("REJECTED");
+            app.setRejectionReason(comment);
+            guaranteeApplicationRepository.save(app);
         }
-        
-        GuaranteeApplication saved = guaranteeApplicationRepository.save(application);
-        
-        // 如果审核通过，创建担保记录
-        if ("APPROVED".equals(status)) {
-            createGuaranteeFromApplication(saved);
-        }
-        
-        return saved;
+        return app;
     }
 
     /**
-     * 从担保申请创建担保记录
+     * 从审核通过的申请创建担保记录（PENDING_SIGN 状态）
+     */
+    private Guarantee createGuaranteeFromApplication(GuaranteeApplication application) {
+        log.info("从申请创建担保记录，申请ID: {}", application.getId());
+        Guarantee g = new Guarantee();
+        g.setGuaranteeNo("G" + System.currentTimeMillis());
+        g.setApplicationId(application.getId());
+        g.setLoanApplicationId(application.getLoanApplicationId());
+        g.setGuarantorId(application.getApplicantId());
+        g.setGuarantorName(application.getApplicantName());
+        g.setGuaranteeAmount(application.getRequestAmount());
+        g.setGuaranteeType(application.getGuaranteeType());
+        g.setStatus("PENDING_SIGN");
+        g.setCounterGuaranteeStatus("PENDING");
+        g.setFeeStatus("UNPAID");
+        return guaranteeRepository.save(g);
+    }
+
+    // ==================== 担保相关 ====================
+
+    /**
+     * 签约 PENDING_SIGN → ACTIVE，设置签约日期/开始日期/结束日期
      */
     @Transactional
-    public Guarantee createGuaranteeFromApplication(GuaranteeApplication application) {
-        log.info("从担保申请创建担保记录，申请编号: {}", application.getAppNo());
-        
-        LoanApplication loanApp = loanApplicationRepository.findById(application.getLoanApplicationId())
-                .orElseThrow(() -> new RuntimeException("贷款申请不存在"));
-        
-        Guarantee guarantee = new Guarantee();
-        guarantee.setGuaranteeNo(generateGuaranteeNo());
-        guarantee.setApplicationId(application.getLoanApplicationId());
-        guarantee.setGuarantorType("企业"); // 默认企业担保
-        guarantee.setGuarantorId(application.getApplicantId());
-        guarantee.setGuarantorName(application.getApplicantName());
-        guarantee.setGuaranteeAmount(application.getRequestAmount());
-        guarantee.setGuaranteeRatio(BigDecimal.valueOf(100)); // 100%担保
-        guarantee.setGuaranteeType(application.getGuaranteeType());
-        guarantee.setStartDate(LocalDate.now());
-        guarantee.setEndDate(LocalDate.now().plusMonths(loanApp.getLoanTermMonths()));
-        guarantee.setStatus("ACTIVE");
-        guarantee.setRiskLevel(loanApp.getRiskLevel());
-        
-        return guaranteeRepository.save(guarantee);
+    public Guarantee signGuarantee(Long id, String contractNo) {
+        log.info("担保签约，担保ID: {}, 合同号: {}", id, contractNo);
+        Guarantee g = guaranteeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("担保记录不存在"));
+        if (!"PENDING_SIGN".equals(g.getStatus())) {
+            throw new RuntimeException("只有待签约状态的担保可以签约");
+        }
+        g.setContractNo(contractNo);
+        g.setSignedDate(LocalDate.now());
+        g.setStartDate(LocalDate.now());
+        g.setEndDate(LocalDate.now().plusYears(1));
+        g.setStatus("ACTIVE");
+        return guaranteeRepository.save(g);
     }
 
     /**
-     * 获取担保申请详情
-     */
-    public GuaranteeApplication getGuaranteeApplication(Long applicationId) {
-        return guaranteeApplicationRepository.findById(applicationId).orElse(null);
-    }
-
-    /**
-     * 获取担保详情
-     */
-    public Guarantee getGuarantee(Long guaranteeId) {
-        return guaranteeRepository.findById(guaranteeId).orElse(null);
-    }
-
-    /**
-     * 获取贷款申请的担保列表
-     */
-    public List<Guarantee> getGuaranteesByLoanApplication(Long loanApplicationId) {
-        return guaranteeRepository.findByApplicationId(loanApplicationId);
-    }
-
-    /**
-     * 释放担保
+     * 登记反担保 PENDING → REGISTERED
      */
     @Transactional
-    public Guarantee releaseGuarantee(Long guaranteeId) {
-        log.info("释放担保，担保ID: {}", guaranteeId);
-        
-        Guarantee guarantee = guaranteeRepository.findById(guaranteeId)
-                .orElseThrow(() -> new RuntimeException("担保不存在"));
-        
-        if (!"ACTIVE".equals(guarantee.getStatus())) {
+    public Guarantee registerCounterGuarantee(Long id, String type, String desc, BigDecimal value) {
+        log.info("登记反担保，担保ID: {}, 类型: {}", id, type);
+        Guarantee g = guaranteeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("担保记录不存在"));
+        if (!"PENDING".equals(g.getCounterGuaranteeStatus())) {
+            throw new RuntimeException("反担保不处于待登记状态");
+        }
+        g.setCounterGuaranteeType(type);
+        g.setCounterGuaranteeDesc(desc);
+        g.setCounterGuaranteeValue(value);
+        g.setCounterGuaranteeStatus("REGISTERED");
+        return guaranteeRepository.save(g);
+    }
+
+    /**
+     * 支付担保费 UNPAID → PAID
+     */
+    @Transactional
+    public Guarantee payFee(Long id, BigDecimal amount) {
+        log.info("支付担保费，担保ID: {}, 金额: {}", id, amount);
+        Guarantee g = guaranteeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("担保记录不存在"));
+        if (!"UNPAID".equals(g.getFeeStatus())) {
+            throw new RuntimeException("担保费不处于未支付状态");
+        }
+        g.setFeePaid(amount);
+        g.setFeeAmount(amount);
+        g.setFeeStatus("PAID");
+        return guaranteeRepository.save(g);
+    }
+
+    /**
+     * 释放担保 ACTIVE → RELEASED，同时释放反担保 REGISTERED → RELEASED
+     */
+    @Transactional
+    public Guarantee releaseGuarantee(Long id, String reason) {
+        log.info("释放担保，担保ID: {}, 原因: {}", id, reason);
+        Guarantee g = guaranteeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("担保记录不存在"));
+        if (!"ACTIVE".equals(g.getStatus())) {
             throw new RuntimeException("只有激活状态的担保可以释放");
         }
-        
-        guarantee.setStatus("RELEASED");
-        
-        return guaranteeRepository.save(guarantee);
+        g.setStatus("RELEASED");
+        g.setReleaseTime(LocalDateTime.now());
+        g.setReleaseReason(reason);
+
+        // 同步释放反担保
+        if ("REGISTERED".equals(g.getCounterGuaranteeStatus())) {
+            g.setCounterGuaranteeStatus("RELEASED");
+        }
+        return guaranteeRepository.save(g);
     }
 
     /**
-     * 生成担保申请编号
+     * 终止担保 ACTIVE → TERMINATED
      */
-    private String generateAppNo() {
-        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        String uuid = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
-        return "GA" + timestamp + uuid;
+    @Transactional
+    public Guarantee terminateGuarantee(Long id, String reason) {
+        log.info("终止担保，担保ID: {}, 原因: {}", id, reason);
+        Guarantee g = guaranteeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("担保记录不存在"));
+        if (!"ACTIVE".equals(g.getStatus())) {
+            throw new RuntimeException("只有激活状态的担保可以终止");
+        }
+        g.setStatus("TERMINATED");
+        g.setRemark(reason);
+        return guaranteeRepository.save(g);
     }
 
     /**
-     * 生成担保编号
+     * 计算担保费 amount * rate/100 * months/12
      */
-    private String generateGuaranteeNo() {
-        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        String uuid = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
-        return "GU" + timestamp + uuid;
+    public BigDecimal calculateFee(BigDecimal amount, BigDecimal rate, Integer months) {
+        if (amount == null || rate == null || months == null) {
+            return BigDecimal.ZERO;
+        }
+        return amount.multiply(rate)
+                .divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP)
+                .multiply(BigDecimal.valueOf(months))
+                .divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
+    }
+
+    // ==================== 查询 ====================
+
+    /**
+     * 按ID查询申请
+     */
+    public GuaranteeApplication getApplication(Long id) {
+        return guaranteeApplicationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("担保申请不存在"));
+    }
+
+    /**
+     * 按ID查询担保
+     */
+    public Guarantee getGuarantee(Long id) {
+        return guaranteeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("担保记录不存在"));
+    }
+
+    /**
+     * 分页查询申请列表（按申请人ID、状态过滤）
+     */
+    public Page<GuaranteeApplication> listApplications(Long applicantId, String status, int page, int size) {
+        Specification<GuaranteeApplication> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (applicantId != null) {
+                predicates.add(cb.equal(root.get("applicantId"), applicantId));
+            }
+            if (status != null && !status.isEmpty()) {
+                predicates.add(cb.equal(root.get("status"), status));
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        return guaranteeApplicationRepository.findAll(spec, pageRequest);
+    }
+
+    /**
+     * 分页查询担保列表（按担保人ID、状态过滤）
+     */
+    public Page<Guarantee> listGuarantees(Long guarantorId, String status, int page, int size) {
+        Specification<Guarantee> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (guarantorId != null) {
+                predicates.add(cb.equal(root.get("guarantorId"), guarantorId));
+            }
+            if (status != null && !status.isEmpty()) {
+                predicates.add(cb.equal(root.get("status"), status));
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        return guaranteeRepository.findAll(spec, pageRequest);
+    }
+
+    /**
+     * 按贷款申请ID查询担保
+     */
+    public List<Guarantee> findByLoanApplicationId(Long loanId) {
+        return guaranteeRepository.findByLoanApplicationId(loanId);
     }
 }

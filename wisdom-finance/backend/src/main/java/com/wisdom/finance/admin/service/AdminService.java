@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -164,13 +165,13 @@ public class AdminService {
         existing.setApprovedLoanAmount(approvedLoanAmount);
         
         if (approvedApplications > 0) {
-            existing.setAverageLoanAmount(approvedLoanAmount.divide(BigDecimal.valueOf(approvedApplications), 2, BigDecimal.ROUND_HALF_UP));
+            existing.setAverageLoanAmount(approvedLoanAmount.divide(BigDecimal.valueOf(approvedApplications), 2, RoundingMode.HALF_UP));
         }
         
         // 计算审批通过率
         if (totalApplications > 0) {
             existing.setApprovalRate(BigDecimal.valueOf(approvedApplications)
-                    .divide(BigDecimal.valueOf(totalApplications), 4, BigDecimal.ROUND_HALF_UP)
+                    .divide(BigDecimal.valueOf(totalApplications), 4, RoundingMode.HALF_UP)
                     .multiply(BigDecimal.valueOf(100)));
         }
         

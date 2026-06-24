@@ -24,4 +24,8 @@ public class PageResult<T> {
         this.pageSize = pageSize;
         this.pages = (int) ((total + pageSize - 1) / pageSize);
     }
+
+    public static <T> PageResult<T> of(List<T> records, Long total, Integer pageNum, Integer pageSize) {
+        return new PageResult<>(records, total, pageNum, pageSize);
+    }
 }

@@ -1,5 +1,7 @@
 package com.wisdom.finance.credit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wisdom.finance.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -15,6 +17,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "t_credit_report")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class CreditReport extends BaseEntity {
     
     @Column(name = "report_no", unique = true, length = 32, nullable = false)
@@ -23,6 +26,7 @@ public class CreditReport extends BaseEntity {
     @Column(name = "company_id")
     private Long companyId; // 企业ID
     
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", insertable = false, updatable = false)
     private Company company;

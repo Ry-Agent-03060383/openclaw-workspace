@@ -2,13 +2,19 @@ package com.wisdom.finance.user.entity;
 
 import com.wisdom.finance.common.entity.BaseEntity;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 用户实体 - 支持多租户多角色
  */
 @Entity
 @Table(name = "t_user")
-public class User extends BaseEntity {
+public class User extends BaseEntity implements UserDetails {
     
     @Column(name = "username", unique = true, nullable = false, length = 50)
     private String username;
@@ -49,6 +55,7 @@ public class User extends BaseEntity {
         SME,                    // 中小企业
         FARMER,                 // 农户
         FINANCIAL_INSTITUTION,  // 金融机构
+        GUARANTEE_INSTITUTION,  // 担保公司
         RISK_MANAGER,           // 风控人员
         ADMIN,                  // 管理人员（平台运营）
         GOVERNMENT,             // 政府部门
@@ -60,6 +67,24 @@ public class User extends BaseEntity {
         DISABLED,  // 禁用
         PENDING    // 待审核
     }
+
+    // UserDetails implementation
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + userType.name()));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() { return true; }
+
+    @Override
+    public boolean isAccountNonLocked() { return true; }
+
+    @Override
+    public boolean isCredentialsNonExpired() { return true; }
+
+    @Override
+    public boolean isEnabled() { return status == UserStatus.ACTIVE; }
 
     // Getters and Setters
     public String getUsername() { return username; }

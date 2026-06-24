@@ -178,20 +178,20 @@ public class RuleEngine {
     }
     
     private int compareValues(Object value1, Object value2) {
+        if (value1 instanceof BigDecimal && value2 instanceof Number) {
+            return ((BigDecimal) value1).compareTo(new BigDecimal(value2.toString()));
+        }
+
+        if (value1 instanceof Number && value2 instanceof Number) {
+            return Double.compare(((Number) value1).doubleValue(), ((Number) value2).doubleValue());
+        }
+
         if (value1 instanceof Comparable && value2 instanceof Comparable) {
             @SuppressWarnings("unchecked")
             Comparable<Object> c1 = (Comparable<Object>) value1;
             return c1.compareTo(value2);
         }
-        
-        if (value1 instanceof BigDecimal && value2 instanceof Number) {
-            return ((BigDecimal) value1).compareTo(new BigDecimal(value2.toString()));
-        }
-        
-        if (value1 instanceof Number && value2 instanceof Number) {
-            return Double.compare(((Number) value1).doubleValue(), ((Number) value2).doubleValue());
-        }
-        
+
         return value1.toString().compareTo(value2.toString());
     }
     
