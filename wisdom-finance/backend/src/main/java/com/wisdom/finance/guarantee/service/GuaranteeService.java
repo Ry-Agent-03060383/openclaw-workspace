@@ -258,6 +258,7 @@ public class GuaranteeService {
     /**
      * 分页查询担保列表（按担保人ID、状态过滤）
      */
+    @Transactional(readOnly = true)
     public Page<Guarantee> listGuarantees(Long guarantorId, String status, int page, int size) {
         Specification<Guarantee> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();

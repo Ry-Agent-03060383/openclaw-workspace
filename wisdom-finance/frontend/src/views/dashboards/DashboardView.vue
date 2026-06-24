@@ -13,6 +13,7 @@ const roleComponent = computed(() => {
   if (role.includes('GOV') || role.includes('gov')) return 'GovDashboard'
   if (role.includes('RISK') || role.includes('risk')) return 'RiskDashboard'
   if (role.includes('THIRD') || role.includes('third')) return 'ThirdPartyDashboard'
+  if (role.includes('GUARANTEE') || role.includes('guarantee')) return 'SmeDashboard'
   return 'SmeDashboard'
 })
 </script>

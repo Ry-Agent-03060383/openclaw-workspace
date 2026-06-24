@@ -2,6 +2,8 @@ package com.wisdom.finance.guarantee.entity;
 
 import com.wisdom.finance.common.entity.BaseEntity;
 import com.wisdom.finance.loan.entity.LoanApplication;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,6 +14,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "t_guarantee")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Guarantee extends BaseEntity {
     
     @Column(name = "guarantee_no", unique = true, length = 32)
@@ -25,6 +28,7 @@ public class Guarantee extends BaseEntity {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "loan_application_id", insertable = false, updatable = false)
+    @JsonIgnore
     private LoanApplication loanApplication;
     
     @Column(name = "guarantor_type", length = 20)
@@ -116,6 +120,7 @@ public class Guarantee extends BaseEntity {
     public void setApplicationId(Long applicationId) { this.applicationId = applicationId; }
     public Long getLoanApplicationId() { return loanApplicationId; }
     public void setLoanApplicationId(Long loanApplicationId) { this.loanApplicationId = loanApplicationId; }
+    @JsonIgnore
     public LoanApplication getLoanApplication() { return loanApplication; }
     public void setLoanApplication(LoanApplication loanApplication) { this.loanApplication = loanApplication; }
     public String getGuarantorType() { return guarantorType; }
