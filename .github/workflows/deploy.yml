@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Build backend Docker image
         run: docker build -t wisdom-finance-backend:latest -f wisdom-finance/backend/Dockerfile wisdom-finance/backend
